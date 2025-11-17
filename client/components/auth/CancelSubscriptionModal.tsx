@@ -96,7 +96,10 @@ export default function CancelSubscriptionModal({
               <p className="text-sm sm:text-base text-gray-600">
                 Your subscription has been successfully cancelled. A
                 confirmation email has been sent to{" "}
-                <span className="font-semibold text-gray-900 break-all">{email}</span>.
+                <span className="font-semibold text-gray-900 break-all">
+                  {email}
+                </span>
+                .
               </p>
             </div>
 
@@ -294,7 +297,10 @@ export default function CancelSubscriptionModal({
 
             {/* Reason for Cancellation */}
             <div className="space-y-1 sm:space-y-2">
-              <Label htmlFor="cancel-reason" className="text-xs sm:text-sm text-gray-700">
+              <Label
+                htmlFor="cancel-reason"
+                className="text-xs sm:text-sm text-gray-700"
+              >
                 Reason for Cancellation
                 <span aria-hidden="true" className="text-red-500 ml-1">
                   *
