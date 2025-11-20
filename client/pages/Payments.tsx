@@ -612,6 +612,10 @@ export default function Payments() {
     });
   };
 
+  const handleEditPaymentMethod = (id: string) => {
+    console.log("Edit payment method:", id);
+  };
+
   const HeaderSort = ({
     label,
     field,
