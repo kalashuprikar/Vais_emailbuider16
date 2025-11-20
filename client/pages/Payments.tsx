@@ -451,11 +451,14 @@ function ModernPaymentCard({
         <AlertDialogContent className="sm:max-w-md">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl">
-              Delete Payment Method?
+              {isLastPaymentMethod
+                ? "Cannot Delete Payment Method"
+                : "Delete Payment Method?"}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-base mt-2">
-              This action cannot be undone. You won't be able to use this
-              payment method for future transactions.
+              {isLastPaymentMethod
+                ? "You must keep at least one payment method on file. Please add another payment method before deleting this one."
+                : "This action cannot be undone. You won't be able to use this payment method for future transactions."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl border border-gray-200 my-4">
