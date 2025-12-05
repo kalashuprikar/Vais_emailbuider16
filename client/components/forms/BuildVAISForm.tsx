@@ -49,6 +49,7 @@ import {
   FileCheck,
   FileX,
   Sparkles,
+  Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FloatingStatsWidget } from "@/components/ui/floating-stats-widget";
