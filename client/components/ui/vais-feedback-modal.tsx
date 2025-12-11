@@ -83,7 +83,7 @@ export function VAISFeedbackModal({
             </p>
 
             {/* 1-10 Rating Scale */}
-            <div className="flex justify-center gap-1.5 py-6">
+            <div className="flex justify-center gap-1.5 py-4">
               {ratingColors.map(({ num, color }) => (
                 <button
                   key={num}
