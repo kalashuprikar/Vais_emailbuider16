@@ -252,18 +252,16 @@ export const BlocksPanel: React.FC<BlocksPanelProps> = ({ onAddBlock }) => {
           value="saved"
           className="flex-1 flex flex-col overflow-hidden m-0"
         >
-          <ScrollArea className="flex-1">
-            <div className="p-4">
-              <div className="space-y-3">
-                <div className="p-4 rounded-lg border border-dashed border-gray-300 text-center">
-                  <p className="text-sm text-gray-500">
-                    No saved blocks yet. Save your favorite blocks to access
-                    them quickly.
-                  </p>
-                </div>
+          <div className="flex-1 p-4 overflow-hidden">
+            <div className="space-y-3">
+              <div className="p-4 rounded-lg border border-dashed border-gray-300 text-center">
+                <p className="text-sm text-gray-500">
+                  No saved blocks yet. Save your favorite blocks to access
+                  them quickly.
+                </p>
               </div>
             </div>
-          </ScrollArea>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
