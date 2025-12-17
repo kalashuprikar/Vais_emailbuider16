@@ -86,6 +86,171 @@ const DraggableBlockButton: React.FC<DraggableBlockProps> = ({ block }) => {
   );
 };
 
+interface Section {
+  title: string;
+  blocks: BlockOption[];
+}
+
+interface SectionsPanelProps {
+  onAddBlock: (block: ContentBlock) => void;
+}
+
+const SectionsPanel: React.FC<SectionsPanelProps> = ({ onAddBlock }) => {
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+  const sections: Section[] = [
+    {
+      title: "Text & images",
+      blocks: [
+        {
+          id: "title",
+          icon: <Type className="w-6 h-6 text-valasys-orange" />,
+          label: "Title",
+          description: "Large heading text",
+          onCreate: () => createTitleBlock(),
+        },
+        {
+          id: "text",
+          icon: <Type className="w-6 h-6 text-valasys-orange" />,
+          label: "Text",
+          description: "Body text content",
+          onCreate: () => createTextBlock(),
+        },
+        {
+          id: "image",
+          icon: <Image className="w-6 h-6 text-valasys-orange" />,
+          label: "Image",
+          description: "Image element",
+          onCreate: () => createImageBlock(),
+        },
+      ],
+    },
+    {
+      title: "Text",
+      blocks: [
+        {
+          id: "title",
+          icon: <Type className="w-6 h-6 text-valasys-orange" />,
+          label: "Title",
+          description: "Large heading text",
+          onCreate: () => createTitleBlock(),
+        },
+        {
+          id: "text",
+          icon: <Type className="w-6 h-6 text-valasys-orange" />,
+          label: "Text",
+          description: "Body text content",
+          onCreate: () => createTextBlock(),
+        },
+      ],
+    },
+    {
+      title: "Images",
+      blocks: [
+        {
+          id: "image",
+          icon: <Image className="w-6 h-6 text-valasys-orange" />,
+          label: "Image",
+          description: "Image element",
+          onCreate: () => createImageBlock(),
+        },
+        {
+          id: "logo",
+          icon: (
+            <div className="w-6 h-6 text-valasys-orange border-2 border-current rounded px-1">
+              LOGO
+            </div>
+          ),
+          label: "Logo",
+          description: "Logo image",
+          onCreate: () => createLogoBlock(),
+        },
+      ],
+    },
+    {
+      title: "Headers",
+      blocks: [
+        {
+          id: "navigation",
+          icon: <Menu className="w-6 h-6 text-valasys-orange" />,
+          label: "Navigation",
+          description: "Menu links",
+          onCreate: () => createNavigationBlock(),
+        },
+      ],
+    },
+    {
+      title: "Footer & signatures",
+      blocks: [
+        {
+          id: "social",
+          icon: <Share2 className="w-6 h-6 text-valasys-orange" />,
+          label: "Social",
+          description: "Social media links",
+          onCreate: () => createSocialBlock(),
+        },
+      ],
+    },
+    {
+      title: "Empty columns",
+      blocks: [
+        {
+          id: "spacer",
+          icon: <Plus className="w-6 h-6 text-valasys-orange" />,
+          label: "Spacer",
+          description: "Vertical space",
+          onCreate: () => createSpacerBlock(),
+        },
+        {
+          id: "divider",
+          icon: <Minus className="w-6 h-6 text-valasys-orange" />,
+          label: "Divider",
+          description: "Horizontal line",
+          onCreate: () => createDividerBlock(),
+        },
+      ],
+    },
+  ];
+
+  const toggleSection = (title: string) => {
+    setExpandedSection(expandedSection === title ? null : title);
+  };
+
+  return (
+    <div className="flex flex-col w-full">
+      <div className="border-b border-gray-200">
+        {sections.map((section) => (
+          <div key={section.title} className="border-b border-gray-200 last:border-b-0">
+            <button
+              onClick={() => toggleSection(section.title)}
+              className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
+            >
+              <span className="text-sm font-medium text-gray-900">
+                {section.title}
+              </span>
+              <ChevronDown
+                className={`w-5 h-5 text-gray-600 transition-transform ${
+                  expandedSection === section.title ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {expandedSection === section.title && (
+              <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+                <div className="grid grid-cols-3 gap-3">
+                  {section.blocks.map((block) => (
+                    <DraggableBlockButton key={block.id} block={block} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export const BlocksPanel: React.FC<BlocksPanelProps> = ({ onAddBlock }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
