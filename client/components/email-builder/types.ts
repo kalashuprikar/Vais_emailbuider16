@@ -143,6 +143,8 @@ export interface HtmlBlock {
   type: "html";
   id: string;
   content: string;
+  width: number;
+  widthUnit: "px" | "%";
   padding: number;
   margin: number;
   borderWidth: number;

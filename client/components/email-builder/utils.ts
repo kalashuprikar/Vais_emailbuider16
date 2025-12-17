@@ -171,6 +171,8 @@ export function createHtmlBlock(content = ""): HtmlBlock {
     type: "html",
     id: generateId(),
     content,
+    width: 100,
+    widthUnit: "%",
     padding: 0,
     margin: 0,
     borderWidth: 0,
