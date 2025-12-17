@@ -173,6 +173,26 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
           <SpacerBlockComponent block={block} isSelected={isSelected} />
         </div>
       );
+    case "centeredImageCard":
+      return (
+        <div onClick={handleClick}>
+          <CenteredImageCardBlockComponent
+            block={block as any}
+            isSelected={isSelected}
+            onBlockUpdate={(updatedBlock) => onBlockUpdate(updatedBlock)}
+          />
+        </div>
+      );
+    case "splitImageCard":
+      return (
+        <div onClick={handleClick}>
+          <SplitImageCardBlockComponent
+            block={block as any}
+            isSelected={isSelected}
+            onBlockUpdate={(updatedBlock) => onBlockUpdate(updatedBlock)}
+          />
+        </div>
+      );
     default:
       return null;
   }
