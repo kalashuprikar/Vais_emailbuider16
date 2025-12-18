@@ -296,6 +296,78 @@ export function createFooterBlock(
   };
 }
 
+export function createFooterWithSocialBlock(): FooterWithSocialBlock {
+  return {
+    type: "footer-with-social",
+    id: generateId(),
+    social: {
+      platforms: [
+        { name: "Facebook", url: "#", icon: "facebook" },
+        { name: "Instagram", url: "#", icon: "instagram" },
+        { name: "LinkedIn", url: "#", icon: "linkedin" },
+        { name: "YouTube", url: "#", icon: "youtube" },
+      ],
+      size: "medium",
+      shape: "rounded",
+      theme: "colored",
+      spacing: 8,
+      alignment: "center",
+      padding: 15,
+      margin: 0,
+    },
+    enterpriseName: {
+      content: "Enterprise name",
+      fontSize: 16,
+      fontColor: "#000000",
+      fontWeight: "bold",
+      fontFamily: "Arial, sans-serif",
+      fontStyle: "normal",
+      alignment: "center",
+      padding: 10,
+      margin: 0,
+    },
+    address: {
+      content: "69 Street Name, 00000, City",
+      fontSize: 13,
+      fontColor: "#666666",
+      fontWeight: "normal",
+      fontFamily: "Arial, sans-serif",
+      fontStyle: "normal",
+      alignment: "center",
+      padding: 10,
+      margin: 0,
+    },
+    subscriptionText: {
+      content: "You've received it because you've subscribed to our newsletter.",
+      fontSize: 12,
+      fontColor: "#999999",
+      fontWeight: "normal",
+      fontFamily: "Arial, sans-serif",
+      fontStyle: "normal",
+      alignment: "center",
+      padding: 10,
+      margin: 0,
+    },
+    unsubscribeLink: {
+      text: "Unsubscribe",
+      url: "#",
+      fontSize: 12,
+      fontColor: "#FF6A00",
+      fontWeight: "normal",
+      fontFamily: "Arial, sans-serif",
+      fontStyle: "normal",
+      padding: 10,
+      margin: 0,
+      textDecoration: "underline",
+    },
+    backgroundColor: "#f5f5f5",
+    padding: 30,
+    margin: 0,
+    alignment: "center",
+    visibility: "all",
+  };
+}
+
 export function createSpacerBlock(height = 20): SpacerBlock {
   return {
     type: "spacer",
