@@ -2552,42 +2552,224 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         );
       case "social":
         return (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="socialSize">Icon Size</Label>
-              <select
-                id="socialSize"
-                value={block.size}
-                onChange={(e) =>
-                  onBlockUpdate({
-                    ...block,
-                    size: e.target.value as any,
-                  })
-                }
-                className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-              >
-                <option value="small">Small</option>
-                <option value="medium">Medium</option>
-                <option value="large">Large</option>
-              </select>
+          <div className="space-y-5">
+            <SocialLinksEditor block={block} onBlockUpdate={onBlockUpdate} />
+
+            <div className="border-t border-gray-200 pt-4">
+              <h4 className="text-xs font-bold text-gray-900 mb-3">
+                Icon Design
+              </h4>
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="socialSize" className="text-xs text-gray-700">
+                    Size
+                  </Label>
+                  <select
+                    id="socialSize"
+                    value={block.size}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        size: e.target.value as any,
+                      })
+                    }
+                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                  >
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>
+                  </select>
+                </div>
+                <div>
+                  <Label htmlFor="socialShape" className="text-xs text-gray-700">
+                    Shape
+                  </Label>
+                  <select
+                    id="socialShape"
+                    value={block.shape}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        shape: e.target.value as any,
+                      })
+                    }
+                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                  >
+                    <option value="rounded">Rounded</option>
+                    <option value="circle">Circle</option>
+                    <option value="square">Square</option>
+                  </select>
+                </div>
+                <div>
+                  <Label htmlFor="socialTheme" className="text-xs text-gray-700">
+                    Theme
+                  </Label>
+                  <select
+                    id="socialTheme"
+                    value={block.theme}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        theme: e.target.value as any,
+                      })
+                    }
+                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                  >
+                    <option value="colored">Colored</option>
+                    <option value="outlined">Outlined</option>
+                    <option value="solid">Solid</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div>
-              <Label htmlFor="socialAlignment">Alignment</Label>
-              <select
-                id="socialAlignment"
-                value={block.alignment}
-                onChange={(e) =>
-                  onBlockUpdate({
-                    ...block,
-                    alignment: e.target.value as any,
-                  })
-                }
-                className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-              >
-                <option value="left">Left</option>
-                <option value="center">Center</option>
-                <option value="right">Right</option>
-              </select>
+
+            <div className="border-t border-gray-200 pt-4">
+              <h4 className="text-xs font-bold text-gray-900 mb-3">Layout</h4>
+              <div className="space-y-3">
+                <div>
+                  <Label
+                    htmlFor="socialSpacing"
+                    className="text-xs text-gray-700 mb-1 block"
+                  >
+                    Space between links
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="socialSpacing"
+                      type="number"
+                      min="0"
+                      value={block.spacing}
+                      onChange={(e) =>
+                        onBlockUpdate({
+                          ...block,
+                          spacing: parseInt(e.target.value),
+                        })
+                      }
+                      className="flex-1 focus:ring-valasys-orange focus:ring-2"
+                    />
+                    <span className="text-xs text-gray-600 self-center px-2">
+                      px
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <Label
+                    htmlFor="socialWidth"
+                    className="text-xs text-gray-700 mb-1 block"
+                  >
+                    Width
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="socialWidth"
+                      type="number"
+                      min="0"
+                      value={block.width}
+                      onChange={(e) =>
+                        onBlockUpdate({
+                          ...block,
+                          width: parseInt(e.target.value),
+                        })
+                      }
+                      className="flex-1 focus:ring-valasys-orange focus:ring-2"
+                    />
+                    <select
+                      value={block.widthUnit}
+                      onChange={(e) =>
+                        onBlockUpdate({
+                          ...block,
+                          widthUnit: e.target.value as "px" | "%",
+                        })
+                      }
+                      className="px-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                    >
+                      <option value="%">%</option>
+                      <option value="px">px</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <Label
+                    htmlFor="socialAlignment"
+                    className="text-xs text-gray-700"
+                  >
+                    Block Alignment
+                  </Label>
+                  <select
+                    id="socialAlignment"
+                    value={block.alignment}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        alignment: e.target.value as any,
+                      })
+                    }
+                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                  >
+                    <option value="left">Left</option>
+                    <option value="center">Center</option>
+                    <option value="right">Right</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 pt-4">
+              <h4 className="text-xs font-bold text-gray-900 mb-3">Spacing</h4>
+              <div className="space-y-3">
+                <div>
+                  <Label
+                    htmlFor="socialPadding"
+                    className="text-xs text-gray-700 mb-1 block"
+                  >
+                    Padding
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="socialPadding"
+                      type="number"
+                      min="0"
+                      value={block.padding}
+                      onChange={(e) =>
+                        onBlockUpdate({
+                          ...block,
+                          padding: parseInt(e.target.value),
+                        })
+                      }
+                      className="flex-1 focus:ring-valasys-orange focus:ring-2"
+                    />
+                    <span className="text-xs text-gray-600 self-center px-2">
+                      px
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <Label
+                    htmlFor="socialMargin"
+                    className="text-xs text-gray-700 mb-1 block"
+                  >
+                    Margin
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="socialMargin"
+                      type="number"
+                      min="0"
+                      value={block.margin}
+                      onChange={(e) =>
+                        onBlockUpdate({
+                          ...block,
+                          margin: parseInt(e.target.value),
+                        })
+                      }
+                      className="flex-1 focus:ring-valasys-orange focus:ring-2"
+                    />
+                    <span className="text-xs text-gray-600 self-center px-2">
+                      px
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         );
