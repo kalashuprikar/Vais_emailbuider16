@@ -353,17 +353,34 @@ export function createHeaderLogoAndDividerTemplate(): ContentBlock[] {
 }
 
 export function createHeaderLogoAndSocialTemplate(): ContentBlock[] {
-  const logo = createLogoBlock();
-  logo.alignment = "left";
+  const headerContent = `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0; padding: 0;">
+  <tr>
+    <td width="50%" style="vertical-align: middle; text-align: left; padding: 20px 0;">
+      <img src="" alt="Logo" style="width: 150px; height: 60px; background-color: #f0f0f0; border: 2px dashed #ccc; display: block;" />
+    </td>
+    <td width="50%" style="vertical-align: middle; text-align: right; padding: 20px 0;">
+      <div style="display: flex; gap: 12px; justify-content: flex-end; align-items: center;">
+        <a href="#" title="Facebook" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; text-decoration: none; color: #4267B2;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </a>
+        <a href="#" title="Twitter" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; text-decoration: none; color: #000000;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.6l-5.165-6.75-5.933 6.75h-3.308l7.73-8.835L.424 2.25h6.7l4.78 6.335L17.52 2.25h.724zm-1.04 17.41h1.828L7.04 3.795H5.074L17.204 19.66z"/>
+          </svg>
+        </a>
+        <a href="#" title="LinkedIn" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; text-decoration: none; color: #0A66C2;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.475-2.236-1.986-2.236-1.081 0-1.722.725-2.004 1.428-.103.25-.129.599-.129.948v5.429h-3.554s.047-8.814 0-9.752h3.554v1.375c.427-.659 1.191-1.595 2.897-1.595 2.117 0 3.704 1.385 3.704 4.362v5.61zM5.337 8.855c-1.144 0-1.915-.761-1.915-1.715 0-.955.77-1.715 1.958-1.715 1.187 0 1.927.76 1.927 1.715 0 .954-.74 1.715-1.97 1.715zm1.946 11.597H3.392V9.956h3.891v10.496zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
+          </svg>
+        </a>
+      </div>
+    </td>
+  </tr>
+</table>`;
 
-  const social = createSocialBlock();
-  social.alignment = "right";
-
-  const wrapper = createHtmlBlock(
-    '<div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 0; gap: 20px; width: 100%;"><!-- Logo will appear on left, Social on right --></div>'
-  );
-
-  return [logo, social];
+  return [createHtmlBlock(headerContent)];
 }
 
 export function createHeaderLogoAndNavigationTemplate(): ContentBlock[] {
