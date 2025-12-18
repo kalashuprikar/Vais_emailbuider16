@@ -265,7 +265,10 @@ function nodesToHTML(nodes: ParsedNode[]): string {
         // Build attribute string
         const attrString = Object.entries(attributes)
           .filter(([key]) => key !== "style" && key && attributes[key] !== null)
-          .map(([key, value]) => `${key}="${String(value).replace(/"/g, "&quot;")}"`)
+          .map(
+            ([key, value]) =>
+              `${key}="${String(value).replace(/"/g, "&quot;")}"`,
+          )
           .join(" ");
 
         // Recursively convert children
@@ -381,18 +384,30 @@ export function sanitizeHTML(htmlContent: string): string {
   }
 
   // Remove script tags
-  let sanitized = htmlContent.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+  let sanitized = htmlContent.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    "",
+  );
 
   // Remove event handlers
   sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, "");
   sanitized = sanitized.replace(/\s*on\w+\s*=\s*[^\s>]*/gi, "");
 
   // Remove style tags
-  sanitized = sanitized.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "");
+  sanitized = sanitized.replace(
+    /<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi,
+    "",
+  );
 
   // Remove potentially dangerous iframe and object tags
-  sanitized = sanitized.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "");
-  sanitized = sanitized.replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, "");
+  sanitized = sanitized.replace(
+    /<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi,
+    "",
+  );
+  sanitized = sanitized.replace(
+    /<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi,
+    "",
+  );
   sanitized = sanitized.replace(/<embed\b[^<]*/gi, "");
 
   return sanitized.trim();

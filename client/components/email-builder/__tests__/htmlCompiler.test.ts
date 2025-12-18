@@ -119,7 +119,8 @@ describe("HTML Compiler", () => {
     });
 
     it("should handle multiple nested tags with attributes", () => {
-      const input = '<h1 style="color: blue;">Title <span class="highlight">highlighted</span></h1>';
+      const input =
+        '<h1 style="color: blue;">Title <span class="highlight">highlighted</span></h1>';
       const result = compileHTML(input);
       expect(result).toContain("<h1");
       expect(result).toContain("highlighted");
