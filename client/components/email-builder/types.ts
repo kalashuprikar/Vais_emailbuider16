@@ -259,6 +259,75 @@ export interface FooterBlock {
   visibility: "all" | "desktop" | "mobile";
 }
 
+export interface FooterWithSocialBlock {
+  type: "footer-with-social";
+  id: string;
+  social: {
+    platforms: {
+      name: string;
+      url: string;
+      icon: string;
+    }[];
+    size: "small" | "medium" | "large";
+    shape: "rounded" | "circle" | "square";
+    theme: "colored" | "outlined" | "solid";
+    spacing: number;
+    alignment: "left" | "center" | "right";
+    padding: number;
+    margin: number;
+  };
+  enterpriseName: {
+    content: string;
+    fontSize: number;
+    fontColor: string;
+    fontWeight: "normal" | "bold";
+    fontFamily: string;
+    fontStyle: "normal" | "italic";
+    alignment: "left" | "center" | "right";
+    padding: number;
+    margin: number;
+  };
+  address: {
+    content: string;
+    fontSize: number;
+    fontColor: string;
+    fontWeight: "normal" | "bold";
+    fontFamily: string;
+    fontStyle: "normal" | "italic";
+    alignment: "left" | "center" | "right";
+    padding: number;
+    margin: number;
+  };
+  subscriptionText: {
+    content: string;
+    fontSize: number;
+    fontColor: string;
+    fontWeight: "normal" | "bold";
+    fontFamily: string;
+    fontStyle: "normal" | "italic";
+    alignment: "left" | "center" | "right";
+    padding: number;
+    margin: number;
+  };
+  unsubscribeLink: {
+    text: string;
+    url: string;
+    fontSize: number;
+    fontColor: string;
+    fontWeight: "normal" | "bold";
+    fontFamily: string;
+    fontStyle: "normal" | "italic";
+    padding: number;
+    margin: number;
+    textDecoration: "none" | "underline";
+  };
+  backgroundColor: string;
+  padding: number;
+  margin: number;
+  alignment: "left" | "center" | "right";
+  visibility: "all" | "desktop" | "mobile";
+}
+
 export interface SpacerBlock {
   type: "spacer";
   id: string;
