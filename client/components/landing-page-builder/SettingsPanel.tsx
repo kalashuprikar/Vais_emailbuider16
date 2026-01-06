@@ -242,7 +242,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </div>
             <div className="p-3 bg-blue-50 rounded border border-blue-200">
               <p className="text-xs text-blue-700">
-                💡 Testimonials can be edited by selecting individual testimonials
+                💡 Testimonials can be edited by selecting individual
+                testimonials
               </p>
             </div>
           </div>
@@ -385,7 +386,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   onChange={(e) =>
                     onBlockUpdate({
                       ...block,
-                      properties: { ...props, submitButtonColor: e.target.value },
+                      properties: {
+                        ...props,
+                        submitButtonColor: e.target.value,
+                      },
                     })
                   }
                   className="w-12 h-10 cursor-pointer"
@@ -396,7 +400,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   onChange={(e) =>
                     onBlockUpdate({
                       ...block,
-                      properties: { ...props, submitButtonColor: e.target.value },
+                      properties: {
+                        ...props,
+                        submitButtonColor: e.target.value,
+                      },
                     })
                   }
                   className="flex-1 focus:ring-valasys-orange focus:ring-2"
@@ -434,7 +441,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 onChange={(e) =>
                   onBlockUpdate({
                     ...block,
-                    properties: { ...props, companyDescription: e.target.value },
+                    properties: {
+                      ...props,
+                      companyDescription: e.target.value,
+                    },
                   })
                 }
                 className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent"

@@ -73,7 +73,10 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
     });
   };
 
-  const handleUpdateBlock = (blockId: string, properties: Record<string, any>) => {
+  const handleUpdateBlock = (
+    blockId: string,
+    properties: Record<string, any>,
+  ) => {
     if (!page) return;
 
     const updatedBlocks = page.blocks.map((block) =>
@@ -97,10 +100,7 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
     setSelectedBlockId(null);
   };
 
-  const handleMoveBlock = (
-    blockId: string,
-    direction: "up" | "down",
-  ) => {
+  const handleMoveBlock = (blockId: string, direction: "up" | "down") => {
     if (!page) return;
 
     const index = page.blocks.findIndex((b) => b.id === blockId);
@@ -154,7 +154,8 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
     );
   }
 
-  const selectedBlock = page.blocks.find((b) => b.id === selectedBlockId) || null;
+  const selectedBlock =
+    page.blocks.find((b) => b.id === selectedBlockId) || null;
 
   return (
     <div className="flex h-screen bg-gray-100">
