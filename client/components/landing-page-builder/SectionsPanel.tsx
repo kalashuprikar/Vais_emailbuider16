@@ -379,7 +379,7 @@ export const SectionsPanel: React.FC<SectionsPanelProps> = ({
           {sectionTemplates.map((template) => (
             <button
               key={template.id}
-              onClick={() => onSelectTemplate(template.id)}
+              onClick={() => onSelectTemplate(template.blocks())}
               className="group text-left hover:opacity-75 transition-opacity"
             >
               {template.preview}
