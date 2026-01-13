@@ -531,33 +531,34 @@ export function createFooterWithContactTemplate(): ContentBlock[] {
   return [createHtmlBlock(footerContent)];
 }
 
-export function createTwoColumnCardBlock(): HtmlBlock {
+export function createTwoColumnCardBlock() {
   return {
-    type: "html",
+    type: "twoColumnCard",
     id: generateId(),
-    content: `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin: 20px 0;">
-      <tr>
-        <td width="48%" style="vertical-align: top; padding-right: 10px;">
-          <div style="background-color: #333333; color: #ffffff; padding: 24px; border-radius: 8px;">
-            <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: bold;">Some title here</h3>
-            <p style="margin: 0; font-size: 14px; line-height: 1.5;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
-          </div>
-        </td>
-        <td width="48%" style="vertical-align: top; padding-left: 10px;">
-          <div style="background-color: #333333; color: #ffffff; padding: 24px; border-radius: 8px;">
-            <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: bold;">Some title here</h3>
-            <p style="margin: 0; font-size: 14px; line-height: 1.5;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
-          </div>
-        </td>
-      </tr>
-    </table>`,
+    cards: [
+      {
+        id: generateId(),
+        title: "Card Title",
+        description: "Add your card description here",
+        backgroundColor: "#333333",
+        textColor: "#ffffff",
+        borderRadius: 8,
+        padding: 24,
+        margin: 10,
+      },
+      {
+        id: generateId(),
+        title: "Card Title",
+        description: "Add your card description here",
+        backgroundColor: "#333333",
+        textColor: "#ffffff",
+        borderRadius: 8,
+        padding: 24,
+        margin: 10,
+      },
+    ],
     width: 100,
     widthUnit: "%",
-    padding: 0,
-    margin: 0,
-    borderWidth: 0,
-    borderColor: "#000000",
-    borderRadius: 0,
     visibility: "all",
   };
 }
