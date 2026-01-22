@@ -1496,7 +1496,13 @@ export default function BuildVAISForm() {
 
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div>
+                    <div
+                      className={cn(
+                        blinkingField === "buildVAIS"
+                          ? "border-2 border-solid border-blink rounded-lg"
+                          : ""
+                      )}
+                    >
                       <Button
                         onClick={handleBuildVAIS}
                         className="w-full bg-valasys-orange hover:bg-valasys-orange/90 transition-all duration-200 transform hover:scale-105"
