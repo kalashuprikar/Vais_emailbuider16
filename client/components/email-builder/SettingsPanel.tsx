@@ -2367,6 +2367,189 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
       case "header":
         return (
           <div className="space-y-4">
+            {/* Logo Upload */}
+            <div>
+              <Label>Logo</Label>
+              {block.logo && (
+                <div className="mb-2 flex items-center gap-2">
+                  <img src={block.logo} alt="Logo" className="max-h-12 max-w-12" />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onBlockUpdate({ ...block, logo: "" })}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      onBlockUpdate({
+                        ...block,
+                        logo: event.target?.result as string,
+                      });
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+              />
+            </div>
+
+            {/* Logo Dimensions */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="logoWidth">Logo Width (px)</Label>
+                <Input
+                  id="logoWidth"
+                  type="number"
+                  value={block.logoWidth}
+                  onChange={(e) =>
+                    onBlockUpdate({ ...block, logoWidth: parseInt(e.target.value) })
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="logoHeight">Logo Height (px)</Label>
+                <Input
+                  id="logoHeight"
+                  type="number"
+                  value={block.logoHeight}
+                  onChange={(e) =>
+                    onBlockUpdate({ ...block, logoHeight: parseInt(e.target.value) })
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Company Name */}
+            <div>
+              <Label htmlFor="companyName">Company Name</Label>
+              <Input
+                id="companyName"
+                type="text"
+                value={block.companyName}
+                onChange={(e) =>
+                  onBlockUpdate({ ...block, companyName: e.target.value })
+                }
+              />
+            </div>
+
+            {/* Company Name Styling */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="companyFontSize">Name Font Size (px)</Label>
+                <Input
+                  id="companyFontSize"
+                  type="number"
+                  value={block.companyFontSize}
+                  onChange={(e) =>
+                    onBlockUpdate({ ...block, companyFontSize: parseInt(e.target.value) })
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="companyFontColor">Name Color</Label>
+                <Input
+                  id="companyFontColor"
+                  type="color"
+                  value={block.companyFontColor}
+                  onChange={(e) =>
+                    onBlockUpdate({ ...block, companyFontColor: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Links */}
+            <div>
+              <Label>Links</Label>
+              <div className="space-y-2">
+                {block.links.map((link, index) => (
+                  <div key={link.id} className="flex gap-1">
+                    <Input
+                      type="text"
+                      placeholder="Link text"
+                      value={link.text}
+                      onChange={(e) => {
+                        const newLinks = [...block.links];
+                        newLinks[index].text = e.target.value;
+                        onBlockUpdate({ ...block, links: newLinks });
+                      }}
+                      className="flex-1"
+                    />
+                    <Input
+                      type="text"
+                      placeholder="URL"
+                      value={link.url}
+                      onChange={(e) => {
+                        const newLinks = [...block.links];
+                        newLinks[index].url = e.target.value;
+                        onBlockUpdate({ ...block, links: newLinks });
+                      }}
+                      className="flex-1"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newLinks = block.links.filter((_, i) => i !== index);
+                        onBlockUpdate({ ...block, links: newLinks });
+                      }}
+                    >
+                      ✕
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => {
+                    onBlockUpdate({
+                      ...block,
+                      links: [...block.links, { id: Math.random().toString(), text: "", url: "" }],
+                    });
+                  }}
+                >
+                  + Add Link
+                </Button>
+              </div>
+            </div>
+
+            {/* Links Styling */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="linksFontSize">Links Font Size (px)</Label>
+                <Input
+                  id="linksFontSize"
+                  type="number"
+                  value={block.linksFontSize}
+                  onChange={(e) =>
+                    onBlockUpdate({ ...block, linksFontSize: parseInt(e.target.value) })
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="linksFontColor">Links Color</Label>
+                <Input
+                  id="linksFontColor"
+                  type="color"
+                  value={block.linksFontColor}
+                  onChange={(e) =>
+                    onBlockUpdate({ ...block, linksFontColor: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Background Color */}
             <div>
               <Label htmlFor="headerBgColor">Background Color</Label>
               <Input
@@ -2378,6 +2561,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 }
               />
             </div>
+
+            {/* Padding */}
             <div>
               <Label htmlFor="headerPadding">Padding (px)</Label>
               <Input
