@@ -23,60 +23,64 @@ interface SourceCodeViewProps {
 
 export const SourceCodeView: React.FC<SourceCodeViewProps> = ({ template }) => {
   const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(false);
+  const [openDownloadTooltip, setOpenDownloadTooltip] = useState(false);
 
   const htmlContent = renderTemplateToHTML(template);
 
   const handleCopy = useCallback(() => {
     if (!htmlContent) {
-      console.error("No content to copy");
+      toast.error("No content to copy");
       return;
     }
 
-    navigator.clipboard
-      .writeText(htmlContent)
-      .then(() => {
-        console.log("Content copied to clipboard");
-        setCopied(true);
-        setOpenTooltip(true);
-        setTimeout(() => {
-          setCopied(false);
-          setOpenTooltip(false);
-        }, 2000);
-      })
-      .catch((err) => {
-        console.error("Failed to copy:", err);
-        // Fallback: use old method
-        const textArea = document.createElement("textarea");
-        textArea.value = htmlContent;
-        document.body.appendChild(textArea);
-        textArea.select();
+    const copyToClipboard = async () => {
+      // Try modern Clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
         try {
-          document.execCommand("copy");
+          await navigator.clipboard.writeText(htmlContent);
           setCopied(true);
           setOpenTooltip(true);
+          toast.success("Copied to clipboard");
           setTimeout(() => {
             setCopied(false);
             setOpenTooltip(false);
           }, 2000);
+          return;
         } catch (err) {
-          console.error("Fallback copy failed:", err);
+          // Clipboard API failed, fall through to fallback
+          console.debug("Clipboard API unavailable, using fallback");
         }
+      }
+
+      // Fallback: use execCommand method
+      const textArea = document.createElement("textarea");
+      textArea.value = htmlContent;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.select();
+
+      try {
+        document.execCommand("copy");
+        setCopied(true);
+        setOpenTooltip(true);
+        toast.success("Copied to clipboard");
+        setTimeout(() => {
+          setCopied(false);
+          setOpenTooltip(false);
+        }, 2000);
+      } catch (err) {
+        console.error("Copy failed:", err);
+        toast.error("Failed to copy to clipboard");
+      } finally {
         document.body.removeChild(textArea);
-      });
+      }
+    };
+
+    copyToClipboard();
   }, [htmlContent]);
-
-  const handleDownloadHTML = () => {
-    const element = document.createElement("a");
-    const file = new Blob([htmlContent], { type: "text/html" });
-    element.href = URL.createObjectURL(file);
-    element.download = `${template.name || "template"}.html`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-
-    toast.success("HTML downloaded successfully");
-  };
 
   const handleDownloadInlineHTML = () => {
     // Create pure HTML with inline CSS
@@ -102,139 +106,29 @@ ${htmlContent.substring(htmlContent.indexOf('<div style="max-width:'), htmlConte
     element.click();
     document.body.removeChild(element);
 
+    setDownloaded(true);
+    setOpenDownloadTooltip(true);
     toast.success("Pure HTML with inline CSS downloaded successfully");
-  };
-
-  const handleDownloadPDF = () => {
-    // Create a new window to print as PDF with the email preview
-    const printWindow = window.open("", "", "height=900,width=1200");
-    if (printWindow) {
-      const bgColor = template.backgroundColor || "#ffffff";
-      const padding = template.padding || 20;
-
-      try {
-        printWindow.document.write(`
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>${template.name || "Template"}</title>
-            <style>
-              * { margin: 0; padding: 0; box-sizing: border-box; }
-              body {
-                font-family: Arial, sans-serif;
-                background-color: #f5f5f5;
-                padding: 40px 20px;
-              }
-              .container {
-                max-width: 800px;
-                margin: 0 auto;
-                background-color: white;
-                padding: 40px;
-                border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-              }
-              .header {
-                border-bottom: 2px solid #e0e0e0;
-                padding-bottom: 20px;
-                margin-bottom: 30px;
-              }
-              .header h1 {
-                font-size: 24px;
-                color: #333;
-                margin-bottom: 10px;
-              }
-              .subject {
-                margin-top: 5px;
-                padding: 8px 12px;
-                background-color: #f0f0f0;
-                border-radius: 4px;
-                display: inline-block;
-                color: #666;
-                font-size: 14px;
-              }
-              .email-preview {
-                border-radius: 4px;
-                min-height: 400px;
-              }
-              .email-preview img {
-                max-width: 100%;
-                height: auto;
-              }
-              .email-preview h1, .email-preview h2, .email-preview h3 {
-                margin-bottom: 15px;
-              }
-              .email-preview p {
-                margin-bottom: 10px;
-                line-height: 1.6;
-              }
-              .email-preview a {
-                color: #007bff;
-                text-decoration: none;
-              }
-              .email-preview button {
-                padding: 10px 20px;
-                background-color: #007bff;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 14px;
-              }
-              @media print {
-                body {
-                  background-color: white;
-                  padding: 0;
-                }
-                .container {
-                  box-shadow: none;
-                  padding: 20px 0;
-                }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <div class="header">
-                <h1>${template.name || "Email Template"}</h1>
-                <div class="subject"><strong>Subject:</strong> ${template.subject || "No Subject"}</div>
-              </div>
-              <div class="email-preview" style="background-color: ${bgColor}; padding: ${padding}px;">
-                ${htmlContent}
-              </div>
-            </div>
-          </body>
-          </html>
-        `);
-        printWindow.document.close();
-        setTimeout(() => {
-          printWindow.print();
-          setTimeout(() => printWindow.close(), 100);
-        }, 250);
-      } catch (error) {
-        console.error("Error generating PDF preview:", error);
-        toast.error("Failed to generate PDF preview");
-      }
-    }
-
-    toast.success(
-      "PDF preview opened. Use your browser's print dialog to save as PDF",
-    );
+    setTimeout(() => {
+      setDownloaded(false);
+      setOpenDownloadTooltip(false);
+    }, 2000);
   };
 
   return (
     <div className="flex flex-col h-full bg-gray-50">
       {/* Header with Actions */}
-      <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-        <div>
+      <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between gap-4 flex-shrink-0">
+        <div className="flex-1 min-w-0">
           <h2 className="text-lg font-semibold text-gray-800">
             HTML Source Code
           </h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-gray-600 mt-1 truncate">
             Complete HTML for: {template.name || "Untitled Template"}
           </p>
         </div>
         <TooltipProvider delayDuration={200}>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <Tooltip open={openTooltip} onOpenChange={setOpenTooltip}>
               <TooltipTrigger asChild>
                 <Button variant="outline" size="sm" onClick={handleCopy}>
@@ -245,36 +139,32 @@ ${htmlContent.substring(htmlContent.indexOf('<div style="max-width:'), htmlConte
                 {copied ? "Copied!" : "Copy Code"}
               </TooltipContent>
             </Tooltip>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Download className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-max">
-                <DropdownMenuItem
-                  onClick={handleDownloadHTML}
-                  className="py-2.5"
-                >
-                  <Download className="w-4 h-4 mr-3" />
-                  Download HTML
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={handleDownloadPDF}
-                  className="py-2.5"
-                >
-                  <Download className="w-4 h-4 mr-3" />
-                  Download Preview (PDF)
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={handleDownloadInlineHTML}
-                  className="py-2.5"
-                >
-                  <Download className="w-4 h-4 mr-3" />
-                  Download Pure HTML
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Tooltip
+              open={openDownloadTooltip}
+              onOpenChange={setOpenDownloadTooltip}
+            >
+              <TooltipTrigger asChild>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Download className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-max">
+                    <DropdownMenuItem
+                      onClick={handleDownloadInlineHTML}
+                      className="py-2.5"
+                    >
+                      <Download className="w-4 h-4 mr-3" />
+                      Download Pure HTML
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TooltipTrigger>
+              <TooltipContent className="font-medium" side="top">
+                {downloaded ? "Downloaded!" : "Download"}
+              </TooltipContent>
+            </Tooltip>
           </div>
         </TooltipProvider>
       </div>

@@ -213,6 +213,13 @@ export const EmailBuilder: React.FC<EmailBuilderProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => {
+                    // If viewing source code or preview, close them first
+                    if (showSourceCode || previewMode) {
+                      setShowSourceCode(false);
+                      setPreviewMode(false);
+                      return;
+                    }
+                    // Otherwise, go back to templates list
                     const updated = {
                       ...template,
                       name: templateName,
@@ -302,7 +309,7 @@ export const EmailBuilder: React.FC<EmailBuilderProps> = ({
           {/* Main Content */}
           <div className="flex-1 flex overflow-hidden">
             {showSourceCode ? (
-              <div className="flex-1">
+              <div className="flex-1 flex flex-col overflow-hidden">
                 <SourceCodeView template={template} />
               </div>
             ) : previewMode ? (
