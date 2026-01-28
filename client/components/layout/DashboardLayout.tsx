@@ -1217,14 +1217,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             style={{
               left: manageUsersTooltipPos.left,
               top: manageUsersTooltipPos.top,
-              transform: "translateX(-50%)",
+              transform: "translateX(8px)",
             }}
             className="fixed z-50"
             role="tooltip"
             onMouseEnter={() => setManageUsersTooltipVisible(true)}
             onMouseLeave={() => setManageUsersTooltipVisible(false)}
           >
-            <div className="bg-gray-800 text-white px-3 py-2 rounded-md text-xs whitespace-nowrap shadow-lg">
+            <div className="bg-gray-800 text-white px-2 py-1 rounded-md text-xs whitespace-nowrap shadow-lg">
               Manage Users (Premium Feature)
             </div>
           </div>,
