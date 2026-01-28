@@ -60,7 +60,7 @@ export const EmailCanvas: React.FC<EmailCanvasProps> = ({
         {/* Template Settings */}
         <div className="bg-white border border-gray-200 rounded-t-lg p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="min-w-0">
               <label
                 htmlFor="subject"
                 className="text-xs font-medium text-gray-700 block"
