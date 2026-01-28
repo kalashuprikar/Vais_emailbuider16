@@ -34,7 +34,7 @@ export const ImageBlockComponent: React.FC<ImageBlockComponentProps> = ({
       style={{ textAlign: block.alignment as any }}
     >
       {block.src ? (
-        <div style={{ textAlign: block.alignment as any }}>
+        <div style={{ textAlign: block.alignment as any, overflow: "hidden" }}>
           <img
             src={block.src}
             alt={block.alt || "Image"}
@@ -48,6 +48,7 @@ export const ImageBlockComponent: React.FC<ImageBlockComponentProps> = ({
               margin: block.alignment === "center" ? "0 auto" : "0",
               maxWidth: "100%",
               objectFit: "contain",
+              boxSizing: "border-box",
             }}
             onError={(e) => {
               console.error("Image failed to load:", block.src);
