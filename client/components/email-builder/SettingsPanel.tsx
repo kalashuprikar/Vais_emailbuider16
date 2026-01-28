@@ -144,9 +144,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       id="titleWidth"
                       type="text"
                       inputMode="numeric"
-                      value={
+                      value={String(
                         isNaN(block.width as any) ? 100 : (block.width ?? 100)
-                      }
+                      )}
                       onChange={(e) => {
                         const inputValue = e.target.value;
                         // Only allow digits
