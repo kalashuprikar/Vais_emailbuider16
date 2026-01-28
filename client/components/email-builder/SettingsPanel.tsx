@@ -6155,6 +6155,259 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           </div>
         );
       }
+      case "centeredImageCard":
+      case "splitImageCard":
+        return (
+          <div className="space-y-5">
+            {/* Image Section */}
+            <div>
+              <h4 className="text-xs font-bold text-gray-900 mb-3">Image</h4>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Upload Image
+                  </Label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="cardImageUpload"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          onBlockUpdate({
+                            ...block,
+                            image: event.target?.result as string,
+                          });
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs"
+                    onClick={() =>
+                      document.getElementById("cardImageUpload")?.click()
+                    }
+                  >
+                    Choose File
+                  </Button>
+                </div>
+
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Or paste Image URL
+                  </Label>
+                  <Input
+                    type="text"
+                    placeholder="https://example.com/image.jpg"
+                    value={(block as any).image || ""}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        image: e.target.value,
+                      })
+                    }
+                    className="focus:ring-valasys-orange focus:ring-2"
+                  />
+                </div>
+
+                {(block as any).image && (
+                  <div>
+                    <Label className="text-xs text-gray-700 mb-1 block">
+                      Image Alt Text
+                    </Label>
+                    <Input
+                      type="text"
+                      placeholder="Describe the image..."
+                      value={(block as any).imageAlt || ""}
+                      onChange={(e) =>
+                        onBlockUpdate({
+                          ...block,
+                          imageAlt: e.target.value,
+                        })
+                      }
+                      className="focus:ring-valasys-orange focus:ring-2"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Content Section */}
+            <div>
+              <h4 className="text-xs font-bold text-gray-900 mb-3">Content</h4>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Title
+                  </Label>
+                  <Input
+                    type="text"
+                    value={(block as any).title || ""}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        title: e.target.value,
+                      })
+                    }
+                    className="focus:ring-valasys-orange focus:ring-2"
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Description
+                  </Label>
+                  <textarea
+                    value={(block as any).description || ""}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        description: e.target.value,
+                      })
+                    }
+                    rows={4}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Button Text
+                  </Label>
+                  <Input
+                    type="text"
+                    value={(block as any).buttonText || ""}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        buttonText: e.target.value,
+                      })
+                    }
+                    className="focus:ring-valasys-orange focus:ring-2"
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Button Link
+                  </Label>
+                  <Input
+                    type="text"
+                    placeholder="https://example.com"
+                    value={(block as any).buttonLink || ""}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        buttonLink: e.target.value,
+                      })
+                    }
+                    className="focus:ring-valasys-orange focus:ring-2"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Styling Section */}
+            <div>
+              <h4 className="text-xs font-bold text-gray-900 mb-3">
+                Styling
+              </h4>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Background Color
+                  </Label>
+                  <Input
+                    type="color"
+                    value={(block as any).backgroundColor || "#ffffff"}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        backgroundColor: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Border Color
+                  </Label>
+                  <Input
+                    type="color"
+                    value={(block as any).borderColor || "#000000"}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        borderColor: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Border Width (px)
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={(block as any).borderWidth || 0}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        borderWidth: parseInt(e.target.value) || 0,
+                      })
+                    }
+                    className="focus:ring-valasys-orange focus:ring-2"
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Border Radius (px)
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={(block as any).borderRadius || 0}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        borderRadius: parseInt(e.target.value) || 0,
+                      })
+                    }
+                    className="focus:ring-valasys-orange focus:ring-2"
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-xs text-gray-700 mb-1 block">
+                    Margin (px)
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={(block as any).margin || 0}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        margin: parseInt(e.target.value) || 0,
+                      })
+                    }
+                    className="focus:ring-valasys-orange focus:ring-2"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       case "features": {
         const featuresBlock = block as any;
         const selectedFeature = featuresBlock.features?.find(
