@@ -44,7 +44,7 @@ export const SplitImageCardBlockComponent: React.FC<
 
   return (
     <div
-      className={`p-4 rounded-lg transition-all ${
+      className={`p-4 rounded-lg ${
         isSelected ? "ring-2 ring-valasys-orange" : ""
       }`}
       style={{
