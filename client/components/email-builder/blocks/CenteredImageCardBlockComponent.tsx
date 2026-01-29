@@ -380,7 +380,7 @@ export const CenteredImageCardBlockComponent: React.FC<
               ) : (
                 <h3
                   onClick={() => setEditMode("title")}
-                  className="font-bold text-xl text-gray-900 cursor-pointer transition-all p-2 rounded hover:border-2 hover:border-dotted hover:border-gray-400"
+                  className="font-bold text-xl text-gray-900 cursor-pointer transition-all p-2 rounded hover:border-2 hover:border-dotted hover:border-valasys-orange"
                 >
                   {block.title}
                 </h3>
