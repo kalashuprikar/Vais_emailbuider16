@@ -239,27 +239,90 @@ export const CenteredImageCardBlockComponent: React.FC<
     >
       <div className="w-full">
         <div
-          className={`relative group mb-6 ${editMode === "image" ? "border-2 border-dotted border-valasys-orange rounded-lg" : ""} hover:border-2 hover:border-dotted hover:border-valasys-orange transition-all rounded-lg`}
+          ref={imageContainerRef}
+          className={`relative group mb-6 transition-all rounded-lg ${
+            editMode === "image"
+              ? "border-2 border-dotted border-valasys-orange"
+              : isHoveringImage
+                ? "border-2 border-dotted border-gray-400"
+                : ""
+          }`}
+          onMouseEnter={() => block.image && setIsHoveringImage(true)}
+          onMouseLeave={() => setIsHoveringImage(false)}
         >
           {block.image ? (
             <>
-              <img
-                src={block.image}
-                alt={block.imageAlt}
-                onClick={() => setEditMode("image")}
-                className="w-full h-auto rounded-lg cursor-pointer"
-              />
-              <label
-                className={`absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-40 opacity-0 group-hover:opacity-100 transition-all cursor-pointer rounded-lg ${editMode === "image" ? "pointer-events-none" : ""}`}
+              <div
+                style={{
+                  position: "relative",
+                  display: "inline-block",
+                  width: "100%",
+                }}
               >
-                <Upload className="w-6 h-6 text-white" />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
+                <img
+                  src={block.image}
+                  alt={block.imageAlt}
+                  onClick={() => setEditMode("image")}
+                  className="w-full h-auto rounded-lg cursor-pointer"
+                  style={{
+                    width: block.width ? `${block.width}px` : "100%",
+                    height: block.height ? `${block.height}px` : "auto",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
                 />
-              </label>
+
+                {/* Overlay on hover */}
+                {isHoveringImage && (
+                  <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-100 transition-all cursor-pointer rounded-lg">
+                    <Upload className="w-6 h-6 text-white" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+
+                {/* Resize Handles - Only show when hovering */}
+                {isHoveringImage && (
+                  <>
+                    {/* Corner handles */}
+                    {[
+                      { pos: "nw", cursor: "nw-resize", top: "-4px", left: "-4px" },
+                      { pos: "ne", cursor: "ne-resize", top: "-4px", right: "-4px" },
+                      { pos: "sw", cursor: "sw-resize", bottom: "-4px", left: "-4px" },
+                      { pos: "se", cursor: "se-resize", bottom: "-4px", right: "-4px" },
+                      { pos: "n", cursor: "n-resize", top: "-4px", left: "50%", transform: "translateX(-50%)" },
+                      { pos: "s", cursor: "s-resize", bottom: "-4px", left: "50%", transform: "translateX(-50%)" },
+                      { pos: "w", cursor: "w-resize", top: "50%", left: "-4px", transform: "translateY(-50%)" },
+                      { pos: "e", cursor: "e-resize", top: "50%", right: "-4px", transform: "translateY(-50%)" },
+                    ].map((handle) => (
+                      <div
+                        key={handle.pos}
+                        onMouseDown={(e) => handleResizeStart(e, handle.pos)}
+                        style={{
+                          position: "absolute",
+                          width: handle.pos.length === 2 ? "12px" : handle.pos === "n" || handle.pos === "s" ? "30px" : "12px",
+                          height: handle.pos.length === 2 ? "12px" : handle.pos === "n" || handle.pos === "s" ? "8px" : "30px",
+                          backgroundColor: "#FF6B35",
+                          border: "2px solid white",
+                          borderRadius: "2px",
+                          cursor: handle.cursor,
+                          zIndex: 40,
+                          ...((handle as any).top && { top: handle.top }),
+                          ...((handle as any).bottom && { bottom: handle.bottom }),
+                          ...((handle as any).left && { left: handle.left }),
+                          ...((handle as any).right && { right: handle.right }),
+                          ...((handle as any).transform && { transform: handle.transform }),
+                        }}
+                        title={`Drag to resize (${handle.pos})`}
+                      />
+                    ))}
+                  </>
+                )}
+              </div>
             </>
           ) : (
             <label className="flex items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
