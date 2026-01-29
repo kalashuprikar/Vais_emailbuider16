@@ -448,7 +448,7 @@ export function createSplitImageCardBlock(
     borderWidth: 1,
     borderRadius: 8,
     padding: 20,
-    margin: 16,
+    margin: 12,
     visibility: "all",
   };
 }
