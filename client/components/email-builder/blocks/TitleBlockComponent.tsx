@@ -7,6 +7,7 @@ interface TitleBlockComponentProps {
   isSelected: boolean;
   isEditing: boolean;
   onEdit: () => void;
+  onEditingChange?: (id: string | null) => void;
   onContentChange: (content: string) => void;
 }
 
@@ -15,11 +16,26 @@ export const TitleBlockComponent: React.FC<TitleBlockComponentProps> = ({
   isSelected,
   isEditing,
   onEdit,
+  onEditingChange,
   onContentChange,
 }) => {
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onEdit();
+  };
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isSelected && onEditingChange) {
+      onEditingChange(block.id);
+    }
+  };
+
+  const handleEditIconClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEditingChange) {
+      onEditingChange(block.id);
+    }
   };
 
   const containerStyle = {
