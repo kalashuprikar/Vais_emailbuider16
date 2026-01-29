@@ -412,7 +412,12 @@ export const CenteredImageCardBlockComponent: React.FC<
               ) : (
                 <p
                   onClick={() => setEditMode("description")}
-                  className="text-sm text-gray-600 cursor-pointer transition-all p-2 rounded whitespace-pre-wrap break-words hover:border-2 hover:border-dotted hover:border-valasys-orange"
+                  onMouseEnter={() => setIsHoveringDescription(true)}
+                  onMouseLeave={() => setIsHoveringDescription(false)}
+                  className="text-sm text-gray-600 cursor-pointer transition-all p-2 rounded whitespace-pre-wrap break-words"
+                  style={{
+                    border: isHoveringDescription ? "2px dashed rgb(255, 106, 0)" : "2px solid transparent",
+                  }}
                 >
                   {block.description}
                 </p>
