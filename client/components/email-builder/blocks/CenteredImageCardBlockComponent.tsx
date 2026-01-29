@@ -1,17 +1,31 @@
 import React, { useState } from "react";
 import { CenteredImageCardBlock } from "../types";
-import { Upload, Edit2 } from "lucide-react";
+import { ContentBlock } from "../types";
+import { Upload, Edit2, Plus, Copy, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface CenteredImageCardBlockComponentProps {
   block: CenteredImageCardBlock;
   isSelected: boolean;
   onBlockUpdate: (block: CenteredImageCardBlock) => void;
+  onAddBlock?: (block: ContentBlock, position: number) => void;
+  onDuplicate?: (block: ContentBlock, position: number) => void;
+  onDelete?: (blockId: string) => void;
+  blockIndex?: number;
 }
 
 export const CenteredImageCardBlockComponent: React.FC<
   CenteredImageCardBlockComponentProps
-> = ({ block, isSelected, onBlockUpdate }) => {
+> = ({
+  block,
+  isSelected,
+  onBlockUpdate,
+  onAddBlock,
+  onDuplicate,
+  onDelete,
+  blockIndex = 0,
+}) => {
   const [editMode, setEditMode] = useState<string | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,28 +46,154 @@ export const CenteredImageCardBlockComponent: React.FC<
     onBlockUpdate({ ...block, [field]: value });
   };
 
+  const SectionToolbar = ({
+    sectionType,
+  }: {
+    sectionType: "image" | "title" | "description" | "buttonText";
+  }) => {
+    const handleCopy = () => {
+      let contentToCopy = "";
+      if (sectionType === "title") contentToCopy = block.title;
+      else if (sectionType === "description") contentToCopy = block.description;
+      else if (sectionType === "buttonText") contentToCopy = block.buttonText;
+      else if (sectionType === "image") contentToCopy = block.image;
+
+      if (contentToCopy) {
+        try {
+          // Use the modern clipboard API
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard
+              .writeText(contentToCopy)
+              .then(() => {
+                console.log("Copied successfully:", contentToCopy);
+              })
+              .catch((err) => {
+                console.error("Failed to copy:", err);
+                // Fallback to older method
+                const textArea = document.createElement("textarea");
+                textArea.value = contentToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+              });
+          } else {
+            // Fallback for older browsers
+            const textArea = document.createElement("textarea");
+            textArea.value = contentToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            console.log("Copied using fallback method:", contentToCopy);
+          }
+        } catch (err) {
+          console.error("Copy failed:", err);
+        }
+      }
+    };
+
+    const handleDelete = () => {
+      if (sectionType === "title") {
+        onBlockUpdate({ ...block, title: "" });
+        setEditMode(null);
+      } else if (sectionType === "description") {
+        onBlockUpdate({ ...block, description: "" });
+        setEditMode(null);
+      } else if (sectionType === "buttonText") {
+        onBlockUpdate({ ...block, buttonText: "" });
+        setEditMode(null);
+      } else if (sectionType === "image") {
+        onBlockUpdate({ ...block, image: "" });
+        setEditMode(null);
+      }
+    };
+
+    const handleAdd = () => {
+      // Add text/content to the section
+      if (sectionType === "title" || sectionType === "description") {
+        // For now, just focus on the field when add is clicked
+        setEditMode(sectionType);
+      }
+    };
+
+    return (
+      <div
+        className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2 w-fit"
+        onMouseDown={(e) => e.preventDefault()}
+      >
+        {sectionType !== "image" && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0 hover:bg-gray-100"
+            title="Add"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              handleAdd();
+            }}
+          >
+            <Plus className="w-3 h-3 text-gray-700" />
+          </Button>
+        )}
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-gray-100"
+          title="Copy"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            handleCopy();
+          }}
+        >
+          <Copy className="w-3 h-3 text-gray-700" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-red-100"
+          title="Delete"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            handleDelete();
+          }}
+        >
+          <Trash2 className="w-3 h-3 text-red-600" />
+        </Button>
+      </div>
+    );
+  };
+
   return (
     <div
-      className={`p-4 rounded-lg transition-all ${
+      className={`rounded-lg transition-all group ${
         isSelected ? "ring-2 ring-valasys-orange" : ""
-      }`}
+      } hover:border-2 hover:border-dotted hover:border-gray-400`}
       style={{
         backgroundColor: block.backgroundColor,
         border: `${block.borderWidth}px solid ${block.borderColor}`,
         borderRadius: `${block.borderRadius}px`,
         margin: `${block.margin}px`,
+        padding: `${block.padding}px`,
       }}
     >
-      <div className="max-w-md mx-auto">
-        <div className="relative group mb-4">
+      <div className="w-full">
+        <div
+          className={`relative group mb-6 ${editMode === "image" ? "border-2 border-dotted border-valasys-orange rounded-lg" : ""} hover:border-2 hover:border-dotted hover:border-valasys-orange transition-all rounded-lg`}
+        >
           {block.image ? (
             <>
               <img
                 src={block.image}
                 alt={block.imageAlt}
-                className="w-full h-auto rounded-t-lg"
+                onClick={() => setEditMode("image")}
+                className="w-full h-auto rounded-lg cursor-pointer"
               />
-              <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-40 opacity-0 group-hover:opacity-100 transition-all cursor-pointer rounded-t-lg">
+              <label
+                className={`absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-40 opacity-0 group-hover:opacity-100 transition-all cursor-pointer rounded-lg ${editMode === "image" ? "pointer-events-none" : ""}`}
+              >
                 <Upload className="w-6 h-6 text-white" />
                 <input
                   type="file"
@@ -64,7 +204,7 @@ export const CenteredImageCardBlockComponent: React.FC<
               </label>
             </>
           ) : (
-            <label className="flex items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-t-lg cursor-pointer hover:bg-gray-50">
+            <label className="flex items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
               <div className="flex flex-col items-center justify-center">
                 <Upload className="w-6 h-6 text-gray-400 mb-2" />
                 <p className="text-sm text-gray-500">Click to upload</p>
@@ -77,14 +217,11 @@ export const CenteredImageCardBlockComponent: React.FC<
               />
             </label>
           )}
+          {editMode === "image" && <SectionToolbar sectionType="image" />}
         </div>
 
-        <div className="p-4 space-y-3">
+        <div className="space-y-4 text-center">
           <div>
-            <label className="text-xs font-semibold text-gray-600 flex items-center gap-2">
-              <Edit2 className="w-3 h-3" />
-              Title
-            </label>
             {editMode === "title" ? (
               <Input
                 value={block.title}
@@ -94,20 +231,17 @@ export const CenteredImageCardBlockComponent: React.FC<
                 className="text-center font-bold text-lg"
               />
             ) : (
-              <p
+              <h3
                 onClick={() => setEditMode("title")}
-                className="text-center font-bold text-lg text-gray-900 cursor-pointer hover:text-valasys-orange p-2 rounded hover:bg-orange-50"
+                className="font-bold text-xl text-gray-900 cursor-pointer transition-all p-2 rounded hover:border-2 hover:border-dotted hover:border-gray-400"
               >
                 {block.title}
-              </p>
+              </h3>
             )}
+            {editMode === "title" && <SectionToolbar sectionType="title" />}
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-gray-600 flex items-center gap-2">
-              <Edit2 className="w-3 h-3" />
-              Description
-            </label>
             {editMode === "description" ? (
               <textarea
                 value={block.description}
@@ -116,23 +250,22 @@ export const CenteredImageCardBlockComponent: React.FC<
                 }
                 onBlur={() => setEditMode(null)}
                 autoFocus
-                className="w-full p-2 border border-gray-300 rounded text-sm text-gray-600 min-h-16"
+                className="w-full p-2 rounded text-sm text-gray-600 min-h-24 border border-dotted border-valasys-orange focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent"
               />
             ) : (
               <p
                 onClick={() => setEditMode("description")}
-                className="text-center text-sm text-gray-600 cursor-pointer hover:text-valasys-orange p-2 rounded hover:bg-orange-50"
+                className="text-sm text-gray-600 cursor-pointer transition-all p-2 rounded whitespace-pre-wrap break-words hover:border-2 hover:border-dotted hover:border-gray-400"
               >
                 {block.description}
               </p>
             )}
+            {editMode === "description" && (
+              <SectionToolbar sectionType="description" />
+            )}
           </div>
 
-          <div>
-            <label className="text-xs font-semibold text-gray-600 flex items-center gap-2">
-              <Edit2 className="w-3 h-3" />
-              Button Text
-            </label>
+          <div className="pt-2">
             {editMode === "buttonText" ? (
               <Input
                 value={block.buttonText}
@@ -144,21 +277,22 @@ export const CenteredImageCardBlockComponent: React.FC<
                 className="text-center"
               />
             ) : (
-              <button
-                onClick={() => setEditMode("buttonText")}
-                className="w-full py-2 px-4 bg-valasys-orange text-white rounded text-sm font-bold hover:bg-orange-600 cursor-pointer"
-              >
-                {block.buttonText}
-              </button>
+              <div className="flex justify-center">
+                <button
+                  onClick={() => setEditMode("buttonText")}
+                  className="inline-block py-2 px-6 bg-valasys-orange text-white rounded text-sm font-bold hover:bg-orange-600 cursor-pointer transition-all hover:border-2 hover:border-dotted hover:border-gray-400"
+                >
+                  {block.buttonText}
+                </button>
+              </div>
+            )}
+            {editMode === "buttonText" && (
+              <SectionToolbar sectionType="buttonText" />
             )}
           </div>
 
-          <div>
-            <label className="text-xs font-semibold text-gray-600 flex items-center gap-2">
-              <Edit2 className="w-3 h-3" />
-              Button Link
-            </label>
-            {editMode === "buttonLink" ? (
+          {editMode === "buttonLink" && (
+            <div>
               <Input
                 value={block.buttonLink}
                 onChange={(e) =>
@@ -167,17 +301,10 @@ export const CenteredImageCardBlockComponent: React.FC<
                 onBlur={() => setEditMode(null)}
                 autoFocus
                 placeholder="https://example.com"
-                className="text-sm"
+                className="text-sm text-center"
               />
-            ) : (
-              <p
-                onClick={() => setEditMode("buttonLink")}
-                className="text-xs text-gray-500 cursor-pointer hover:text-valasys-orange p-2 rounded hover:bg-orange-50 break-all"
-              >
-                {block.buttonLink || "No link set"}
-              </p>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
