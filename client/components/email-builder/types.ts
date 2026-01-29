@@ -377,6 +377,8 @@ export interface CenteredImageCardBlock {
   padding: number;
   margin: number;
   visibility: "all" | "desktop" | "mobile";
+  width?: number;
+  height?: number;
 }
 
 export interface SplitImageCardBlock {
@@ -390,6 +392,8 @@ export interface SplitImageCardBlock {
   buttonText: string;
   buttonLink: string;
   buttonLinkType?: "url" | "page" | "email";
+  width?: number;
+  height?: number;
   imagePosition: "left" | "right";
   backgroundColor: string;
   borderColor: string;
