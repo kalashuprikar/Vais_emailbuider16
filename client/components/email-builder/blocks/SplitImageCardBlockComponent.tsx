@@ -105,7 +105,7 @@ export const SplitImageCardBlockComponent: React.FC<
                     onChange={(e) => handleFieldChange("title", e.target.value)}
                     onBlur={() => setEditMode(null)}
                     autoFocus
-                    className="font-bold text-lg border-2 border-solid border-valasys-orange focus:outline-none"
+                    className="font-bold text-lg border border-solid border-valasys-orange focus:outline-none"
                   />
                 ) : (
                   <p
@@ -115,7 +115,7 @@ export const SplitImageCardBlockComponent: React.FC<
                     className="font-bold text-lg text-gray-900 cursor-pointer p-3 rounded transition-all"
                     style={{
                       border: isHoveringTitle
-                        ? "2px dashed rgb(255, 106, 0)"
+                        ? "1px dashed rgb(255, 106, 0)"
                         : "none",
                     }}
                   >
@@ -133,7 +133,7 @@ export const SplitImageCardBlockComponent: React.FC<
                     }
                     onBlur={() => setEditMode(null)}
                     autoFocus
-                    className="w-full p-3 rounded text-sm text-gray-600 min-h-20 border-2 border-dashed border-valasys-orange focus:outline-none bg-white"
+                    className="w-full p-3 rounded text-sm text-gray-600 min-h-20 border border-solid border-valasys-orange focus:outline-none bg-white"
                   />
                 ) : (
                   <p
@@ -143,7 +143,7 @@ export const SplitImageCardBlockComponent: React.FC<
                     className="text-sm text-gray-600 cursor-pointer p-3 rounded whitespace-pre-line transition-all"
                     style={{
                       border: isHoveringDescription
-                        ? "2px dashed rgb(255, 106, 0)"
+                        ? "1px dashed rgb(255, 106, 0)"
                         : "none",
                     }}
                   >
@@ -161,7 +161,7 @@ export const SplitImageCardBlockComponent: React.FC<
                     }
                     onBlur={() => setEditMode(null)}
                     autoFocus
-                    className="border-2 border-solid border-valasys-orange focus:outline-none"
+                    className="border border-solid border-valasys-orange focus:outline-none"
                   />
                 ) : (
                   <button
@@ -170,7 +170,7 @@ export const SplitImageCardBlockComponent: React.FC<
                     onMouseLeave={() => setIsHoveringButton(false)}
                     className="py-2 px-4 bg-valasys-orange text-white rounded text-sm font-bold hover:bg-orange-600 cursor-pointer transition-all"
                     style={{
-                      border: isHoveringButton ? "2px dashed white" : "none",
+                      border: isHoveringButton ? "1px dashed white" : "none",
                     }}
                   >
                     {block.buttonText}
@@ -188,7 +188,7 @@ export const SplitImageCardBlockComponent: React.FC<
                     onBlur={() => setEditMode(null)}
                     autoFocus
                     placeholder="https://example.com"
-                    className="text-sm border-2 border-solid border-valasys-orange focus:outline-none"
+                    className="text-sm border border-solid border-valasys-orange focus:outline-none"
                   />
                 ) : (
                   <p
@@ -198,7 +198,7 @@ export const SplitImageCardBlockComponent: React.FC<
                     className="text-xs text-gray-500 cursor-pointer p-3 rounded break-all transition-all"
                     style={{
                       border: isHoveringButtonLink
-                        ? "2px dashed rgb(255, 106, 0)"
+                        ? "1px dashed rgb(255, 106, 0)"
                         : "none",
                     }}
                   >
