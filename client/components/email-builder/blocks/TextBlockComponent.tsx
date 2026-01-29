@@ -7,6 +7,7 @@ interface TextBlockComponentProps {
   isSelected: boolean;
   isEditing: boolean;
   onEdit: () => void;
+  onEditingChange?: (id: string | null) => void;
   onContentChange: (content: string) => void;
 }
 
@@ -15,6 +16,7 @@ export const TextBlockComponent: React.FC<TextBlockComponentProps> = ({
   isSelected,
   isEditing,
   onEdit,
+  onEditingChange,
   onContentChange,
 }) => {
   const getWidthStyle = () => {
@@ -27,6 +29,20 @@ export const TextBlockComponent: React.FC<TextBlockComponentProps> = ({
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onEdit();
+  };
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isSelected && onEditingChange) {
+      onEditingChange(block.id);
+    }
+  };
+
+  const handleEditIconClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEditingChange) {
+      onEditingChange(block.id);
+    }
   };
 
   return (
