@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { ImageBlock } from "../types";
 import { Upload } from "lucide-react";
 
@@ -15,6 +15,11 @@ export const ImageBlockComponent: React.FC<ImageBlockComponentProps> = ({
   onSrcChange,
   onDimensionChange,
 }) => {
+  const [isResizing, setIsResizing] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startWidth, setStartWidth] = useState(block.width);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -39,6 +44,44 @@ export const ImageBlockComponent: React.FC<ImageBlockComponentProps> = ({
       reader.readAsDataURL(file);
     }
   };
+
+  const handleResizeStart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsResizing(true);
+    setStartX(e.clientX);
+    setStartWidth(block.width);
+  };
+
+  React.useEffect(() => {
+    if (!isResizing) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const deltaX = e.clientX - startX;
+      let newWidth = Math.max(50, startWidth + deltaX); // Minimum width of 50px
+
+      // Apply constraints based on width unit
+      if (block.widthUnit === "%") {
+        newWidth = Math.min(100, newWidth); // Max 100% for percentage
+      } else {
+        newWidth = Math.min(800, newWidth); // Max 800px for pixel width
+      }
+
+      onDimensionChange(newWidth, block.height);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing, startX, startWidth, block, onDimensionChange]);
 
   return (
     <div
