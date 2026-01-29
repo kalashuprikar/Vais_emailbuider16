@@ -109,7 +109,12 @@ export const SplitImageCardBlockComponent: React.FC<
                 ) : (
                   <p
                     onClick={() => setEditMode("title")}
-                    className="font-bold text-lg text-gray-900 cursor-pointer p-2 rounded"
+                    onMouseEnter={() => setIsHoveringTitle(true)}
+                    onMouseLeave={() => setIsHoveringTitle(false)}
+                    className="font-bold text-lg text-gray-900 cursor-pointer p-3 rounded transition-all"
+                    style={{
+                      border: isHoveringTitle ? "2px dashed rgb(255, 106, 0)" : "none",
+                    }}
                   >
                     {block.title}
                   </p>
