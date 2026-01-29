@@ -135,7 +135,12 @@ export const SplitImageCardBlockComponent: React.FC<
                 ) : (
                   <p
                     onClick={() => setEditMode("description")}
-                    className="text-sm text-gray-600 cursor-pointer p-2 rounded whitespace-pre-line"
+                    onMouseEnter={() => setIsHoveringDescription(true)}
+                    onMouseLeave={() => setIsHoveringDescription(false)}
+                    className="text-sm text-gray-600 cursor-pointer p-3 rounded whitespace-pre-line transition-all"
+                    style={{
+                      border: isHoveringDescription ? "2px dashed rgb(255, 106, 0)" : "none",
+                    }}
                   >
                     {block.description}
                   </p>
