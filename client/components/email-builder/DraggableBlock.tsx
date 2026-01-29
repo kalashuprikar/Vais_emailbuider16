@@ -66,16 +66,22 @@ export const DraggableBlock: React.FC<DraggableBlockProps> = ({
   );
 
   const ref = React.useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = React.useState(false);
   drag(drop(ref));
 
   return (
     <div
       ref={ref}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "group relative cursor-move rounded-lg border-2 border-transparent group-hover:border-valasys-orange group-hover:border-dashed transition-all",
+        "group relative cursor-move rounded-lg transition-all",
         isDragging && "opacity-50 scale-95 transition-all",
         isOver && "ring-2 ring-valasys-orange rounded-lg",
       )}
+      style={{
+        border: isHovered ? "2px dashed rgb(255, 106, 0)" : "2px solid transparent",
+      }}
     >
 
       <BlockRenderer
