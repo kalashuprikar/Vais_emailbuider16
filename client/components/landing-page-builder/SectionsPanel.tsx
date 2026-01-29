@@ -52,7 +52,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Meet Framer",
     description: "With buttons",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-4 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-4 transition-all`}>
         <div className="text-center">
           <div className="text-sm font-semibold text-gray-900">Meet Framer</div>
           <div className="text-xs text-gray-600 mt-1">Internet canvas.</div>
@@ -74,7 +74,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Logo",
     description: "Three logos",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex items-center justify-center gap-4 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex items-center justify-center gap-4 transition-all`}>
         <div className="flex items-center justify-center gap-4 w-full">
           <div className="flex items-center gap-1 text-gray-400">
             <div className="w-1 h-1 rounded-full bg-gray-400"></div>
@@ -98,7 +98,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Infinite canvas",
     description: "Content layout",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex transition-all`}>
         <div className="flex-1 flex flex-col justify-center gap-2">
           <div className="text-xs font-semibold text-gray-900">
             Infinite canvas.
@@ -120,7 +120,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Infinite canvas",
     description: "Two-column section",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex gap-4 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex gap-4 transition-all`}>
         <div className="flex-1 flex flex-col justify-center gap-2">
           <div className="text-xs font-semibold text-gray-900">
             Infinite canvas.
@@ -148,7 +148,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Canvas & Publish",
     description: "Two-column layout",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex gap-4 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex gap-4 transition-all`}>
         <div className="flex-1 flex flex-col justify-center items-center gap-2">
           <div className="w-8 h-8 bg-gray-100 rounded"></div>
           <div className="text-xs font-semibold text-gray-900">Canvas.</div>
@@ -172,7 +172,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Three Column",
     description: "Design, Write, Publish",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex gap-3 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex gap-3 transition-all`}>
         <div className="flex-1 flex flex-col justify-center items-center gap-2">
           <div className="w-6 h-6 bg-gray-100 rounded"></div>
           <div className="text-xs font-semibold text-gray-900 text-center">
@@ -200,7 +200,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Statistics",
     description: "Stats showcase",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex gap-4 items-center justify-center transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex gap-4 items-center justify-center transition-all`}>
         <div className="flex-1 flex flex-col items-center justify-center gap-1">
           <div className="text-lg font-bold text-gray-900">30+</div>
           <div className="text-xs text-gray-500">Templates</div>
@@ -222,7 +222,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Testimonial",
     description: "Customer quote",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-4 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-4 transition-all`}>
         <div className="text-center">
           <div className="text-sm font-semibold text-gray-900 leading-relaxed">
             "Framer is one of the best web design builders I have come across"
@@ -238,7 +238,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Pricing",
     description: "Pricing plans with tiers",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-4 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-4 transition-all`}>
         <div className="text-center">
           <div className="text-sm font-semibold text-gray-900">Pricing</div>
           <div className="text-xs text-gray-500 mt-1">Subtitle.</div>
@@ -272,7 +272,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "FAQ",
     description: "Frequently asked questions",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-3 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-3 transition-all`}>
         <div className="text-center mb-2">
           <div className="text-sm font-semibold text-gray-900">FAQ</div>
         </div>
@@ -299,7 +299,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Signup",
     description: "Newsletter signup section",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-4 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col items-center justify-center gap-4 transition-all`}>
         <div className="text-center">
           <div className="text-sm font-semibold text-gray-900">
             Stay in the loop.
@@ -318,7 +318,7 @@ const sectionTemplates: SectionTemplate[] = [
     name: "Footer",
     description: "Footer with links and branding",
     preview: (isSelected) => (
-      <div className={`bg-white ${isSelected ? 'border border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col justify-center gap-3 transition-all`}>
+      <div className={`bg-white ${isSelected ? 'border-4 border-double border-gray-900' : 'border border-gray-200 hover:border-dashed hover:border-gray-400'} rounded-xl p-6 h-40 flex flex-col justify-center gap-3 transition-all`}>
         <div className="flex justify-between gap-4">
           <div className="text-xs">
             <div className="font-semibold text-gray-900 mb-1">Product</div>
