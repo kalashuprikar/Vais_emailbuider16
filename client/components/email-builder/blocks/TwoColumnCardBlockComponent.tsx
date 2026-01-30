@@ -163,18 +163,20 @@ export const TwoColumnCardBlockComponent: React.FC<
             <div className="relative" style={{ borderRadius: `${card.borderRadius}px ${card.borderRadius}px 0 0` }}>
               {card.image ? (
                 <>
-                  <img
-                    src={card.image}
-                    alt={card.imageAlt || "Card image"}
-                    style={{
-                      width: card.imageWidth ? `${card.imageWidth}px` : "100%",
-                      height: card.imageHeight ? `${card.imageHeight}px` : "auto",
-                      maxWidth: "100%",
-                      display: "block",
-                      objectFit: "cover",
-                      borderRadius: `${card.borderRadius}px ${card.borderRadius}px 0 0`,
-                    }}
-                  />
+                  <div style={{ padding: "12px" }}>
+                    <img
+                      src={card.image}
+                      alt={card.imageAlt || "Card image"}
+                      style={{
+                        width: card.imageWidth ? `${card.imageWidth}px` : "100%",
+                        height: card.imageHeight ? `${card.imageHeight}px` : "auto",
+                        maxWidth: "100%",
+                        display: "block",
+                        objectFit: "cover",
+                        borderRadius: `${card.borderRadius}px`,
+                      }}
+                    />
+                  </div>
 
                   {/* Image Overlay */}
                   {hoveredCardId === card.id && (
