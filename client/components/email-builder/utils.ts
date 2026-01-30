@@ -910,7 +910,9 @@ export function renderBlockToHTML(block: ContentBlock): string {
         ?.map(
           (card: any) => {
             const imageHtml = card.image
-              ? `<img src="${card.image}" alt="${card.imageAlt || ""}" style="width: 100%; height: auto; display: block; border-radius: ${card.borderRadius}px ${card.borderRadius}px 0 0; object-fit: cover; border: none;" />`
+              ? `<div style="padding: 12px;">
+                  <img src="${card.image}" alt="${card.imageAlt || ""}" style="width: 100%; height: auto; display: block; border-radius: ${card.borderRadius}px; object-fit: cover; border: none;" />
+                </div>`
               : "";
             return `<div style="width: 48%; display: inline-block; vertical-align: top; padding-right: 10px; box-sizing: border-box;">
               <div style="background-color: ${card.backgroundColor}; color: ${card.textColor}; border-radius: ${card.borderRadius}px; margin: ${card.margin}px; overflow: hidden; border: none;">
