@@ -258,9 +258,14 @@ export const TwoColumnCardBlockComponent: React.FC<
             </div>
 
             {/* Content Section */}
-            <div style={{ padding: `${card.padding}px`, color: card.textColor }}>
-              <h3 className="font-bold text-lg mb-3">{card.title}</h3>
-              <p className="text-sm leading-relaxed">{card.description}</p>
+            <div style={{
+              padding: `${card.padding}px`,
+              color: card.textColor,
+              margin: 0,
+              border: "none"
+            }}>
+              <h3 className="font-bold text-lg mb-3 m-0">{card.title}</h3>
+              <p className="text-sm leading-relaxed m-0">{card.description}</p>
             </div>
           </div>
         ))}
