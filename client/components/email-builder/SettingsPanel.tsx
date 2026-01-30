@@ -1443,20 +1443,41 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     crossOrigin="anonymous"
                     className="max-w-full max-h-full"
                     onError={(e) => {
-                      console.error(
-                        "❌ Image failed to load. This may be due to CORS restrictions or an invalid URL.",
-                        (block as any).src,
-                      );
-                      (e.target as HTMLImageElement).style.display = "none";
-                      const parent = (e.target as HTMLImageElement)
-                        .parentElement;
-                      if (parent) {
-                        const errorDiv = document.createElement("div");
-                        errorDiv.className =
-                          "text-gray-400 text-xs text-center";
-                        errorDiv.textContent =
-                          "Image failed to load (CORS or invalid URL)";
-                        parent.appendChild(errorDiv);
+                      const imgElement = e.target as HTMLImageElement;
+                      const currentSrc = imgElement.src;
+
+                      // Check if this is the original URL or already a proxy attempt
+                      if (
+                        !currentSrc.includes("cors-anywhere") &&
+                        !currentSrc.includes("corsproxy")
+                      ) {
+                        console.warn(
+                          "⚠️ Image blocked by CORS. Retrying with CORS proxy...",
+                          (block as any).src,
+                        );
+                        // Try with CORS proxy
+                        imgElement.src = `https://cors-anywhere.herokuapp.com/${(block as any).src}`;
+
+                        // Set a timeout to show error if proxy also fails
+                        imgElement.onerror = () => {
+                          imgElement.style.display = "none";
+                          const parent = imgElement.parentElement;
+                          if (parent) {
+                            const errorDiv = document.createElement("div");
+                            errorDiv.className =
+                              "text-gray-400 text-xs text-center p-4";
+                            errorDiv.innerHTML = `
+                              <div style="margin-bottom: 8px;">⚠️ Image failed to load</div>
+                              <div style="font-size: 11px; color: #999; margin-bottom: 8px;">
+                                The image server is blocking requests (CORS restricted)
+                              </div>
+                              <div style="font-size: 11px; color: #999;">
+                                <strong>Solution:</strong> Download and upload the image directly
+                              </div>
+                            `;
+                            parent.appendChild(errorDiv);
+                          }
+                        };
                       }
                     }}
                   />
@@ -1494,10 +1515,19 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   }
                   className="flex-1 focus:ring-valasys-orange focus:ring-2"
                 />
-                <Button variant="outline" size="sm" className="px-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="px-2"
+                  title="Images must allow CORS requests. If using external URLs, ensure the server allows cross-origin requests. Use file upload as an alternative."
+                >
                   ⓘ
                 </Button>
               </div>
+              <p className="text-xs text-gray-500 mt-2">
+                ⚠️ External URLs may not load due to CORS restrictions. Use file
+                upload for reliable image hosting.
+              </p>
             </div>
 
             <div>
@@ -1532,8 +1562,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     Type
                   </Label>
                   <select
-                    value={linkType}
-                    onChange={(e) => setLinkType(e.target.value)}
+                    value={(block as any).linkType || "url"}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        linkType: e.target.value as "url" | "page" | "email",
+                      })
+                    }
                     className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent"
                   >
                     <option value="url">Absolute Link (URL)</option>
@@ -1549,6 +1584,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   <Input
                     type="text"
                     placeholder="https://example.com"
+                    value={(block as any).linkTarget || ""}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        linkTarget: e.target.value,
+                      })
+                    }
                     className="focus:ring-valasys-orange focus:ring-2"
                   />
                 </div>
@@ -1560,6 +1602,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   <Input
                     type="text"
                     placeholder="Hover text"
+                    value={(block as any).linkTooltip || ""}
+                    onChange={(e) =>
+                      onBlockUpdate({
+                        ...block,
+                        linkTooltip: e.target.value,
+                      })
+                    }
                     className="focus:ring-valasys-orange focus:ring-2"
                   />
                 </div>
@@ -1568,6 +1617,14 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   variant="link"
                   size="sm"
                   className="text-xs h-auto p-0 text-valasys-orange"
+                  onClick={() =>
+                    onBlockUpdate({
+                      ...block,
+                      linkType: undefined,
+                      linkTarget: "",
+                      linkTooltip: "",
+                    })
+                  }
                 >
                   Remove link
                 </Button>

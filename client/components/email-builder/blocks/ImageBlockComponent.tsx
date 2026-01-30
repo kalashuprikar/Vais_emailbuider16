@@ -116,27 +116,100 @@ export const ImageBlockComponent: React.FC<ImageBlockComponentProps> = ({
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
-          <img
-            src={block.src}
-            alt={block.alt || "Image"}
-            crossOrigin="anonymous"
-            style={{
-              width: `${block.width || 100}${block.widthUnit || "px"}`,
-              height:
-                block.heightUnit === "%"
-                  ? `${block.height || 100}${block.heightUnit}`
-                  : `${block.height || "auto"}px`,
-              display: "block",
-              maxWidth: "100%",
-              objectFit: "contain",
-              boxSizing: "border-box",
-              userSelect: "none",
-            }}
-            onError={(e) => {
-              console.error("Image failed to load:", block.src);
-              (e.target as HTMLImageElement).style.border = "2px solid red";
-            }}
-          />
+          {(block as any).linkTarget ? (
+            <a
+              href={(block as any).linkTarget}
+              title={(block as any).linkTooltip || ""}
+              style={{
+                display: "inline-block",
+                textDecoration: "none",
+              }}
+            >
+              <img
+                src={block.src}
+                alt={block.alt || "Image"}
+                crossOrigin="anonymous"
+                style={{
+                  width: `${block.width || 100}${block.widthUnit || "px"}`,
+                  height:
+                    block.heightUnit === "%"
+                      ? `${block.height || 100}${block.heightUnit}`
+                      : `${block.height || "auto"}px`,
+                  display: "block",
+                  maxWidth: "100%",
+                  objectFit: "contain",
+                  boxSizing: "border-box",
+                  userSelect: "none",
+                }}
+                onError={(e) => {
+                  const imgElement = e.target as HTMLImageElement;
+                  const currentSrc = imgElement.src;
+
+                  // Retry with CORS proxy if not already attempted
+                  if (
+                    !currentSrc.includes("cors-anywhere") &&
+                    !currentSrc.includes("corsproxy")
+                  ) {
+                    console.warn(
+                      "⚠️ Image blocked by CORS. Retrying with proxy...",
+                      block.src,
+                    );
+                    imgElement.src = `https://cors-anywhere.herokuapp.com/${block.src}`;
+                    imgElement.onerror = () => {
+                      console.error(
+                        "Image failed to load even with CORS proxy:",
+                        block.src,
+                      );
+                      imgElement.style.border = "2px solid red";
+                      imgElement.style.opacity = "0.5";
+                    };
+                  }
+                }}
+              />
+            </a>
+          ) : (
+            <img
+              src={block.src}
+              alt={block.alt || "Image"}
+              crossOrigin="anonymous"
+              style={{
+                width: `${block.width || 100}${block.widthUnit || "px"}`,
+                height:
+                  block.heightUnit === "%"
+                    ? `${block.height || 100}${block.heightUnit}`
+                    : `${block.height || "auto"}px`,
+                display: "block",
+                maxWidth: "100%",
+                objectFit: "contain",
+                boxSizing: "border-box",
+                userSelect: "none",
+              }}
+              onError={(e) => {
+                const imgElement = e.target as HTMLImageElement;
+                const currentSrc = imgElement.src;
+
+                // Retry with CORS proxy if not already attempted
+                if (
+                  !currentSrc.includes("cors-anywhere") &&
+                  !currentSrc.includes("corsproxy")
+                ) {
+                  console.warn(
+                    "⚠️ Image blocked by CORS. Retrying with proxy...",
+                    block.src,
+                  );
+                  imgElement.src = `https://cors-anywhere.herokuapp.com/${block.src}`;
+                  imgElement.onerror = () => {
+                    console.error(
+                      "Image failed to load even with CORS proxy:",
+                      block.src,
+                    );
+                    imgElement.style.border = "2px solid red";
+                    imgElement.style.opacity = "0.5";
+                  };
+                }
+              }}
+            />
+          )}
 
           {/* Hover Toolbar */}
           {isHovering && (

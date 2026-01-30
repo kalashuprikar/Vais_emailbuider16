@@ -405,8 +405,28 @@ export const CenteredImageCardBlockComponent: React.FC<
                   objectFit: "cover",
                 }}
                 onError={(e) => {
-                  console.error("Image failed to load:", block.image);
-                  (e.target as HTMLImageElement).style.border = "2px solid red";
+                  const imgElement = e.target as HTMLImageElement;
+                  const currentSrc = imgElement.src;
+
+                  // Retry with CORS proxy if not already attempted
+                  if (
+                    !currentSrc.includes("cors-anywhere") &&
+                    !currentSrc.includes("corsproxy")
+                  ) {
+                    console.warn(
+                      "⚠️ Image blocked by CORS. Retrying with proxy...",
+                      block.image,
+                    );
+                    imgElement.src = `https://cors-anywhere.herokuapp.com/${block.image}`;
+                    imgElement.onerror = () => {
+                      console.error(
+                        "Image failed to load even with CORS proxy:",
+                        block.image,
+                      );
+                      imgElement.style.border = "2px solid red";
+                      imgElement.style.opacity = "0.5";
+                    };
+                  }
                 }}
               />
 
