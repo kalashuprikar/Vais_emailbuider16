@@ -382,6 +382,7 @@ export const SplitImageCardBlockComponent: React.FC<
           {isImageLeft && (
             <div
               className="md:w-2/5"
+              ref={imageContainerRef}
               onMouseEnter={() => block.image && setIsHoveringImage(true)}
               onMouseLeave={() => setIsHoveringImage(false)}
             >
@@ -390,7 +391,14 @@ export const SplitImageCardBlockComponent: React.FC<
                   <img
                     src={block.image}
                     alt={block.imageAlt}
-                    className="w-full h-auto rounded"
+                    className="rounded"
+                    style={{
+                      width: `${block.width || 300}px`,
+                      height: `${block.height || 200}px`,
+                      display: "block",
+                      maxWidth: "100%",
+                      objectFit: "cover",
+                    }}
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-40 opacity-0 group-hover:opacity-100 transition-all rounded">
                     <div className="flex gap-3 items-center">
@@ -426,6 +434,62 @@ export const SplitImageCardBlockComponent: React.FC<
                       </button>
                     </div>
                   </div>
+
+                  {/* Resize Handles - Only show when hovering */}
+                  {isHoveringImage && (
+                    <>
+                      {[
+                        {
+                          pos: "nw",
+                          cursor: "nw-resize",
+                          top: "-4px",
+                          left: "-4px",
+                        },
+                        {
+                          pos: "ne",
+                          cursor: "ne-resize",
+                          top: "-4px",
+                          right: "-4px",
+                        },
+                        {
+                          pos: "sw",
+                          cursor: "sw-resize",
+                          bottom: "-4px",
+                          left: "-4px",
+                        },
+                        {
+                          pos: "se",
+                          cursor: "se-resize",
+                          bottom: "-4px",
+                          right: "-4px",
+                        },
+                      ].map((handle) => (
+                        <div
+                          key={handle.pos}
+                          onMouseDown={(e) => handleResizeStart(e, handle.pos)}
+                          style={{
+                            position: "absolute",
+                            width: "12px",
+                            height: "12px",
+                            backgroundColor: "#FF6B35",
+                            border: "2px solid white",
+                            borderRadius: "2px",
+                            cursor: handle.cursor,
+                            zIndex: 40,
+                            ...((handle as any).top && { top: handle.top }),
+                            ...((handle as any).bottom && {
+                              bottom: handle.bottom,
+                            }),
+                            ...((handle as any).left && { left: handle.left }),
+                            ...((handle as any).right && {
+                              right: handle.right,
+                            }),
+                          }}
+                          title={`Drag to resize (${handle.pos})`}
+                        />
+                      ))}
+                    </>
+                  )}
                 </div>
               ) : (
                 <label className="flex items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded cursor-pointer hover:bg-gray-50">
