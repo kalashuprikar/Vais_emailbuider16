@@ -386,60 +386,50 @@ export const CenteredImageCardBlockComponent: React.FC<
         >
           {block.image ? (
             <>
-              <div
+              <img
+                src={block.image}
+                alt={block.imageAlt}
+                onClick={() => setEditMode("image")}
+                className="w-full rounded-lg cursor-pointer"
+                crossOrigin="anonymous"
                 style={{
-                  position: "relative",
-                  display: "block",
                   width: "100%",
+                  height: "auto",
+                  display: "block",
+                  maxWidth: "100%",
                 }}
-              >
-                <img
-                  src={block.image}
-                  alt={block.imageAlt}
-                  onClick={() => setEditMode("image")}
-                  className="w-full rounded-lg cursor-pointer"
-                  crossOrigin="anonymous"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    objectFit: "cover",
-                    display: "block",
-                    maxWidth: "100%",
-                  }}
-                  onError={(e) => {
-                    console.error("Image failed to load:", block.image);
-                    (e.target as HTMLImageElement).style.border = "2px solid red";
-                  }}
-                />
+                onError={(e) => {
+                  console.error("Image failed to load:", block.image);
+                  (e.target as HTMLImageElement).style.border = "2px solid red";
+                }}
+              />
 
-                {/* Overlay on hover */}
-                {isHoveringImage && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-100 transition-all rounded-lg">
-                    <div className="flex gap-3 items-center">
-                      <label className="flex items-center justify-center cursor-pointer p-2 hover:bg-black hover:bg-opacity-60 rounded transition-all">
-                        <Upload className="w-6 h-6 text-white" />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                        />
-                      </label>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onBlockUpdate({ ...block, image: "" });
-                        }}
-                        className="flex items-center justify-center cursor-pointer p-2 hover:bg-black hover:bg-opacity-60 rounded transition-all"
-                        title="Delete image"
-                      >
-                        <Trash2 className="w-6 h-6 text-white" />
-                      </button>
-                    </div>
+              {/* Overlay on hover */}
+              {isHoveringImage && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-100 transition-all rounded-lg">
+                  <div className="flex gap-3 items-center">
+                    <label className="flex items-center justify-center cursor-pointer p-2 hover:bg-black hover:bg-opacity-60 rounded transition-all">
+                      <Upload className="w-6 h-6 text-white" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onBlockUpdate({ ...block, image: "" });
+                      }}
+                      className="flex items-center justify-center cursor-pointer p-2 hover:bg-black hover:bg-opacity-60 rounded transition-all"
+                      title="Delete image"
+                    >
+                      <Trash2 className="w-6 h-6 text-white" />
+                    </button>
                   </div>
-                )}
-
-              </div>
+                </div>
+              )}
 
               {/* Resize Handles - Only show when hovering (Corners only) */}
               {isHoveringImage && (
