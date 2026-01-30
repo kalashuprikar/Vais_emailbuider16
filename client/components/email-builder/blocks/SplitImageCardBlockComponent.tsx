@@ -15,13 +15,7 @@ interface SplitImageCardBlockComponentProps {
 
 export const SplitImageCardBlockComponent: React.FC<
   SplitImageCardBlockComponentProps
-> = ({
-  block,
-  isSelected,
-  onBlockUpdate,
-  onDuplicate,
-  blockIndex = 0,
-}) => {
+> = ({ block, isSelected, onBlockUpdate, onDuplicate, blockIndex = 0 }) => {
   const [editMode, setEditMode] = useState<string | null>(null);
   const [isHoveringTitle, setIsHoveringTitle] = useState(false);
   const [isHoveringDescription, setIsHoveringDescription] = useState(false);
@@ -110,7 +104,12 @@ export const SplitImageCardBlockComponent: React.FC<
     };
 
     const handleAdd = () => {
-      if (sectionType === "title" || sectionType === "description" || sectionType === "buttonText" || sectionType === "buttonLink") {
+      if (
+        sectionType === "title" ||
+        sectionType === "description" ||
+        sectionType === "buttonText" ||
+        sectionType === "buttonLink"
+      ) {
         setEditMode(sectionType);
       }
     };
@@ -347,7 +346,9 @@ export const SplitImageCardBlockComponent: React.FC<
                         className="focus:outline-none"
                         style={{ border: "2px solid rgb(255, 106, 0)" }}
                       />
-                      <div className="mt-2"><SectionToolbar sectionType="buttonText" /></div>
+                      <div className="mt-2">
+                        <SectionToolbar sectionType="buttonText" />
+                      </div>
                     </>
                   ) : (
                     <button

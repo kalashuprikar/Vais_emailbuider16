@@ -16,13 +16,7 @@ interface CenteredImageCardBlockComponentProps {
 
 export const CenteredImageCardBlockComponent: React.FC<
   CenteredImageCardBlockComponentProps
-> = ({
-  block,
-  isSelected,
-  onBlockUpdate,
-  onDuplicate,
-  blockIndex = 0,
-}) => {
+> = ({ block, isSelected, onBlockUpdate, onDuplicate, blockIndex = 0 }) => {
   const [editMode, setEditMode] = useState<string | null>(null);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeHandle, setResizeHandle] = useState<string | null>(null);
@@ -139,7 +133,12 @@ export const CenteredImageCardBlockComponent: React.FC<
   const SectionToolbar = ({
     sectionType,
   }: {
-    sectionType: "image" | "title" | "description" | "buttonText" | "buttonLink";
+    sectionType:
+      | "image"
+      | "title"
+      | "description"
+      | "buttonText"
+      | "buttonLink";
   }) => {
     const handleCopy = () => {
       if (!onDuplicate) {
@@ -174,7 +173,12 @@ export const CenteredImageCardBlockComponent: React.FC<
     };
 
     const handleAdd = () => {
-      if (sectionType === "title" || sectionType === "description" || sectionType === "buttonText" || sectionType === "buttonLink") {
+      if (
+        sectionType === "title" ||
+        sectionType === "description" ||
+        sectionType === "buttonText" ||
+        sectionType === "buttonLink"
+      ) {
         setEditMode(sectionType);
       }
     };
@@ -453,7 +457,9 @@ export const CenteredImageCardBlockComponent: React.FC<
                     className="text-center focus:outline-none"
                     style={{ border: "2px solid rgb(255, 106, 0)" }}
                   />
-                  <div className="flex justify-center mt-2"><SectionToolbar sectionType="buttonText" /></div>
+                  <div className="flex justify-center mt-2">
+                    <SectionToolbar sectionType="buttonText" />
+                  </div>
                 </>
               ) : (
                 <div className="flex justify-center">
@@ -508,7 +514,6 @@ export const CenteredImageCardBlockComponent: React.FC<
             </div>
           )}
         </div>
-
       </div>
     </div>
   );
