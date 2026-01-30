@@ -308,44 +308,44 @@ export const SplitImageCardBlockComponent: React.FC<
               {(block.description || editMode === "description") && (
                 <div>
                   {editMode === "description" ? (
-                    <textarea
-                      value={block.description}
-                      onChange={(e) =>
-                        handleFieldChange("description", e.target.value)
-                      }
-                      onBlur={() => setTimeout(() => setEditMode(null), 200)}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      autoFocus
-                      className="w-full resize-none"
-                      style={{
-                        padding: "1rem",
-                        borderRadius: "0.5rem",
-                        fontSize: "0.875rem",
-                        color: "rgb(55, 65, 81)",
-                        minHeight: "6rem",
-                        border: "2px solid rgb(255, 106, 0)",
-                        boxSizing: "border-box",
-                        outline: "none",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  ) : (
                     <>
-                      <p
-                        onClick={() => setEditMode("description")}
-                        onMouseEnter={() => setIsHoveringDescription(true)}
-                        onMouseLeave={() => setIsHoveringDescription(false)}
-                        className="text-sm text-gray-600 cursor-pointer p-3 rounded whitespace-pre-line transition-all"
+                      <textarea
+                        value={block.description}
+                        onChange={(e) =>
+                          handleFieldChange("description", e.target.value)
+                        }
+                        onBlur={() => setTimeout(() => setEditMode(null), 200)}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        autoFocus
+                        className="w-full resize-none"
                         style={{
-                          border: isHoveringDescription
-                            ? "1px dashed rgb(255, 106, 0)"
-                            : "none",
+                          padding: "1rem",
+                          borderRadius: "0.5rem",
+                          fontSize: "0.875rem",
+                          color: "rgb(55, 65, 81)",
+                          minHeight: "6rem",
+                          border: "2px solid rgb(255, 106, 0)",
+                          boxSizing: "border-box",
+                          outline: "none",
+                          backgroundColor: "white",
                         }}
-                      >
-                        {block.description}
-                      </p>
-                      {isHoveringDescription && <SectionToolbar sectionType="description" />}
+                      />
+                      <SectionToolbar sectionType="description" />
                     </>
+                  ) : (
+                    <p
+                      onClick={() => setEditMode("description")}
+                      onMouseEnter={() => setIsHoveringDescription(true)}
+                      onMouseLeave={() => setIsHoveringDescription(false)}
+                      className="text-sm text-gray-600 cursor-pointer p-3 rounded whitespace-pre-line transition-all"
+                      style={{
+                        border: isHoveringDescription
+                          ? "1px dashed rgb(255, 106, 0)"
+                          : "none",
+                      }}
+                    >
+                      {block.description}
+                    </p>
                   )}
                 </div>
               )}
