@@ -1453,9 +1453,16 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       if (parent) {
                         const errorDiv = document.createElement("div");
                         errorDiv.className =
-                          "text-gray-400 text-xs text-center";
-                        errorDiv.textContent =
-                          "Image failed to load (CORS or invalid URL)";
+                          "text-gray-400 text-xs text-center p-4";
+                        errorDiv.innerHTML = `
+                          <div style="margin-bottom: 8px;">⚠️ Image failed to load</div>
+                          <div style="font-size: 11px; color: #999; margin-bottom: 8px;">
+                            Possible reasons: CORS restrictions, invalid URL, or server issues
+                          </div>
+                          <div style="font-size: 11px; color: #999;">
+                            Solution: Upload the image directly instead of using an external URL
+                          </div>
+                        `;
                         parent.appendChild(errorDiv);
                       }
                     }}
