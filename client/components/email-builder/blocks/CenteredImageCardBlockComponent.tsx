@@ -17,7 +17,14 @@ interface CenteredImageCardBlockComponentProps {
 
 export const CenteredImageCardBlockComponent: React.FC<
   CenteredImageCardBlockComponentProps
-> = ({ block, isSelected, onBlockUpdate, blockIndex = 0, onDuplicate, onDelete }) => {
+> = ({
+  block,
+  isSelected,
+  onBlockUpdate,
+  blockIndex = 0,
+  onDuplicate,
+  onDelete,
+}) => {
   const [editMode, setEditMode] = useState<string | null>(null);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeHandle, setResizeHandle] = useState<string | null>(null);

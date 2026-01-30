@@ -1170,9 +1170,10 @@ export function renderBlockToHTML(block: ContentBlock): string {
       </td>`;
 
       // Arrange cells based on imagePosition
-      const cells = splitBlock.imagePosition === "left"
-        ? imageCell + contentCell
-        : contentCell + imageCell;
+      const cells =
+        splitBlock.imagePosition === "left"
+          ? imageCell + contentCell
+          : contentCell + imageCell;
 
       return `<div style="background-color: ${splitBlock.backgroundColor}; border-radius: ${splitBlock.borderRadius}px; ${borderStyle} margin: ${splitBlock.margin}px; max-width: 600px; margin-left: auto; margin-right: auto; overflow: hidden;">
         <table width="100%" border="0" cellpadding="0" cellspacing="0">

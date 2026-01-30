@@ -16,7 +16,14 @@ interface SplitImageCardBlockComponentProps {
 
 export const SplitImageCardBlockComponent: React.FC<
   SplitImageCardBlockComponentProps
-> = ({ block, isSelected, onBlockUpdate, onDuplicate, onDelete, blockIndex = 0 }) => {
+> = ({
+  block,
+  isSelected,
+  onBlockUpdate,
+  onDuplicate,
+  onDelete,
+  blockIndex = 0,
+}) => {
   const [editMode, setEditMode] = useState<string | null>(null);
   const [isHoveringTitle, setIsHoveringTitle] = useState(false);
   const [isHoveringDescription, setIsHoveringDescription] = useState(false);
@@ -67,7 +74,6 @@ export const SplitImageCardBlockComponent: React.FC<
       alert("Please enter an image URL");
     }
   };
-
 
   const isImageLeft = block.imagePosition === "left";
 
