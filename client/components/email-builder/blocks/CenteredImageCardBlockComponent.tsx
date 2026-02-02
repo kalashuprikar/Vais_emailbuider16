@@ -386,7 +386,7 @@ export const CenteredImageCardBlockComponent: React.FC<
     onClear: (id: string) => void;
   }) => {
     return (
-      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2">
+      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2 w-fit">
         <Button
           variant="ghost"
           size="sm"
