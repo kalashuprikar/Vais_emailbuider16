@@ -206,25 +206,34 @@ export const TwoColumnCardBlockComponent: React.FC<
         {block.cards.map((card, index) => (
           <div
             key={card.id}
-            className="flex-1 rounded-lg overflow-hidden"
+            className="flex-1 rounded-lg overflow-hidden flex flex-col"
             style={{
               backgroundColor: card.backgroundColor,
               margin: `${card.margin}px`,
               borderRadius: `${card.borderRadius}px`,
+              height: "400px",
             }}
             onMouseEnter={() => setHoveredCardId(card.id)}
             onMouseLeave={() => setHoveredCardId(null)}
           >
             {/* Image Section */}
             <div
-              className="relative"
+              className="relative h-40 flex-shrink-0"
               style={{
                 borderRadius: `${card.borderRadius}px ${card.borderRadius}px 0 0`,
               }}
             >
               {card.image ? (
                 <>
-                  <div style={{ padding: "12px" }}>
+                  <div
+                    style={{
+                      padding: "12px",
+                      height: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
                     <img
                       src={card.image}
                       alt={card.imageAlt || "Card image"}
@@ -242,12 +251,8 @@ export const TwoColumnCardBlockComponent: React.FC<
                         }
                       }}
                       style={{
-                        width: card.imageWidth
-                          ? `${card.imageWidth}px`
-                          : "100%",
-                        height: card.imageHeight
-                          ? `${card.imageHeight}px`
-                          : "auto",
+                        width: "100%",
+                        height: "100%",
                         maxWidth: "100%",
                         display: "block",
                         objectFit: "cover",
@@ -257,7 +262,7 @@ export const TwoColumnCardBlockComponent: React.FC<
                   </div>
                 </>
               ) : (
-                <label className="flex items-center justify-center w-full h-40 bg-gray-800 cursor-pointer hover:bg-gray-700 transition-colors rounded">
+                <label className="flex items-center justify-center w-full h-full bg-gray-800 cursor-pointer hover:bg-gray-700 transition-colors rounded">
                   <div className="flex flex-col items-center justify-center">
                     <Upload className="w-6 h-6 text-gray-400 mb-2" />
                     <p className="text-sm text-gray-400">Click to upload</p>
@@ -274,6 +279,7 @@ export const TwoColumnCardBlockComponent: React.FC<
 
             {/* Content Section */}
             <div
+              className="flex-1 overflow-hidden"
               style={{
                 padding: `${Math.max(12, card.padding)}px`,
                 color: card.textColor,
