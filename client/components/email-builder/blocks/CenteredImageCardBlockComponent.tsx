@@ -247,7 +247,7 @@ export const CenteredImageCardBlockComponent: React.FC<
     onBlockUpdate({ ...block, buttons: newButtons });
   };
 
-  const handleDuplicateTitle = (id: string) => {
+  const handleDuplicateTitle = async (id: string) => {
     const titleToDuplicate = titles.find((t) => t.id === id);
     if (titleToDuplicate) {
       const newTitles = [...titles];
@@ -260,43 +260,24 @@ export const CenteredImageCardBlockComponent: React.FC<
 
       // Copy to clipboard with complete styling
       const styledContent = `<h2 style="font-weight: 700; font-size: 20px; color: rgb(17, 24, 39); text-align: center; margin: 0; padding: 12px; border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5;">${titleToDuplicate.content}</h2>`;
-      navigator.clipboard
-        .write([
-          new ClipboardItem({
-            "text/html": new Blob([styledContent], { type: "text/html" }),
-            "text/plain": new Blob([titleToDuplicate.content], {
-              type: "text/plain",
-            }),
-          }),
-        ])
-        .then(() => {
-          toast({
-            title: "Copied!",
-            description: "Title copied to clipboard",
-            duration: 2000,
-          });
-        })
-        .catch((err) => {
-          console.error("Copy failed:", err);
-          // Fallback to text-only copy
-          navigator.clipboard
-            .writeText(titleToDuplicate.content)
-            .then(() => {
-              toast({
-                title: "Copied!",
-                description: "Title copied to clipboard",
-                duration: 2000,
-              });
-            })
-            .catch(() => {
-              toast({
-                title: "Copy Failed",
-                description: "Could not copy to clipboard",
-                variant: "destructive",
-                duration: 2000,
-              });
-            });
+      const success = await copyToClipboard(
+        titleToDuplicate.content,
+        styledContent,
+      );
+      if (success) {
+        toast({
+          title: "Copied!",
+          description: "Title copied to clipboard",
+          duration: 2000,
         });
+      } else {
+        toast({
+          title: "Copy Failed",
+          description: "Could not copy to clipboard",
+          variant: "destructive",
+          duration: 2000,
+        });
+      }
     }
   };
 
