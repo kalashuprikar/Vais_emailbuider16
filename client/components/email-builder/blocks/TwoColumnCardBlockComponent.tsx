@@ -95,57 +95,6 @@ export const TwoColumnCardBlockComponent: React.FC<
     onUpdate({ ...block, cards: updatedCards });
   };
 
-  const handleStartEditingField = (cardId: string, fieldName: string) => {
-    const card = block.cards.find((c) => c.id === cardId);
-    if (card) {
-      const value = fieldName === "title" ? card.title : card.description;
-      setEditingField(`${cardId}-${fieldName}`);
-      setEditingValue(value);
-    }
-  };
-
-  const handleSaveEdit = (cardId: string, fieldName: string) => {
-    const updatedCards = block.cards.map((card) =>
-      card.id === cardId
-        ? { ...card, [fieldName]: editingValue }
-        : card,
-    );
-    onUpdate({ ...block, cards: updatedCards });
-    setEditingField(null);
-    setEditingValue("");
-  };
-
-  const handleKeyPress = (
-    e: React.KeyboardEvent,
-    cardId: string,
-    fieldName: string,
-  ) => {
-    if (e.key === "Enter" && fieldName === "title") {
-      handleSaveEdit(cardId, fieldName);
-    }
-    if (e.key === "Escape") {
-      setEditingField(null);
-      setEditingValue("");
-    }
-  };
-
-  const handleCopyStyledTitle = (value: string) => {
-    navigator.clipboard.writeText(value);
-  };
-
-  const handleCopyStyledDescription = (value: string) => {
-    navigator.clipboard.writeText(value);
-  };
-
-  const handleDeleteField = (cardId: string, fieldName: string) => {
-    const updatedCards = block.cards.map((card) =>
-      card.id === cardId
-        ? { ...card, [fieldName]: "" }
-        : card,
-    );
-    onUpdate({ ...block, cards: updatedCards });
-  };
-
   const handleResizeStart = (
     e: React.MouseEvent,
     cardId: string,
