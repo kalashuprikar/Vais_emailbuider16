@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import React, { useState, useEffect } from "react";
 import { TwoColumnCardBlock } from "../types";
 import { Upload, Trash2, Plus, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
