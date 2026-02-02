@@ -5939,18 +5939,22 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       <button
                         onClick={() => {
                           // Batch all updates into a single state update
-                          const updatedCards = twoColBlock.cards.map((card: any) =>
-                            card.id === selectedCardId
-                              ? {
-                                  ...card,
-                                  image: "",
-                                  imageAlt: "",
-                                  imageWidth: undefined,
-                                  imageHeight: undefined,
-                                }
-                              : card,
+                          const updatedCards = twoColBlock.cards.map(
+                            (card: any) =>
+                              card.id === selectedCardId
+                                ? {
+                                    ...card,
+                                    image: "",
+                                    imageAlt: "",
+                                    imageWidth: undefined,
+                                    imageHeight: undefined,
+                                  }
+                                : card,
                           );
-                          onBlockUpdate({ ...twoColBlock, cards: updatedCards });
+                          onBlockUpdate({
+                            ...twoColBlock,
+                            cards: updatedCards,
+                          });
                         }}
                         className="w-full px-3 py-2 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                       >
@@ -5999,9 +6003,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   </Label>
                   <Input
                     value={selectedCard.image || ""}
-                    onChange={(e) =>
-                      handleCardUpdate("image", e.target.value)
-                    }
+                    onChange={(e) => handleCardUpdate("image", e.target.value)}
                     placeholder="https://example.com/image.jpg"
                     className="text-xs focus:ring-valasys-orange focus:ring-2"
                   />
@@ -6061,15 +6063,21 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                           onChange={(e) =>
                             handleCardUpdate(
                               "imageWidth",
-                              e.target.value ? parseInt(e.target.value) : undefined,
+                              e.target.value
+                                ? parseInt(e.target.value)
+                                : undefined,
                             )
                           }
                           placeholder="Auto"
                           className="flex-1 text-xs focus:ring-valasys-orange focus:ring-2"
                         />
-                        <span className="px-2 py-1 text-sm text-gray-600">px</span>
+                        <span className="px-2 py-1 text-sm text-gray-600">
+                          px
+                        </span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">Leave empty for auto</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Leave empty for auto
+                      </p>
                     </div>
 
                     <div>
@@ -6084,15 +6092,21 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                           onChange={(e) =>
                             handleCardUpdate(
                               "imageHeight",
-                              e.target.value ? parseInt(e.target.value) : undefined,
+                              e.target.value
+                                ? parseInt(e.target.value)
+                                : undefined,
                             )
                           }
                           placeholder="Auto"
                           className="flex-1 text-xs focus:ring-valasys-orange focus:ring-2"
                         />
-                        <span className="px-2 py-1 text-sm text-gray-600">px</span>
+                        <span className="px-2 py-1 text-sm text-gray-600">
+                          px
+                        </span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">Leave empty for auto</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Leave empty for auto
+                      </p>
                     </div>
                   </div>
                 </div>
