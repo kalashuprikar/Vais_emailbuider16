@@ -449,7 +449,7 @@ export default function PerformanceAnalytics() {
             </Card>
 
             {/* Right: custom neck funnel chart with gradients */}
-            <Card className="h-full flex flex-col">
+            <Card className="h-full flex flex-col content-section-hover">
               <CardHeader>
                 <CardTitle className="text-sm sm:text-base">
                   Funnel (Neck Chart)
