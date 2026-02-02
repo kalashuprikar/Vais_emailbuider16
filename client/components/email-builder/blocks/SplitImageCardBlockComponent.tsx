@@ -584,9 +584,9 @@ export const SplitImageCardBlockComponent: React.FC<
           <div className={isImageLeft ? "md:w-3/5" : "md:w-3/5 order-first"}>
             <div className="space-y-4 p-4">
               {/* Titles Section */}
-              {titles.length > 0 && (
+              {titles.filter(t => t.content).length > 0 && (
                 <div className="space-y-2">
-                  {titles.map((title, idx) => (
+                  {titles.filter(t => t.content).map((title, idx) => (
                     <div key={title.id}>
                       {editMode === `title-${title.id}` ? (
                         <>
