@@ -5920,6 +5920,39 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   </button>
                 ))}
               </div>
+              <div className="flex gap-2 mb-4">
+                <Button
+                  onClick={handleAddCard}
+                  size="sm"
+                  variant="outline"
+                  className="flex-1 text-xs"
+                >
+                  <Plus className="w-3 h-3 mr-1" />
+                  Add Card
+                </Button>
+                {twoColBlock.cards?.length > 1 && (
+                  <>
+                    <Button
+                      onClick={handleDuplicateCard}
+                      size="sm"
+                      variant="outline"
+                      className="text-xs"
+                      title="Copy this card"
+                    >
+                      <Copy className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      onClick={handleDeleteCard}
+                      size="sm"
+                      variant="outline"
+                      className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+                      title="Delete this card"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </>
+                )}
+              </div>
             </div>
 
             <div>
