@@ -655,10 +655,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                           onClick={() => setEditMode(`description-${desc.id}`)}
                           className="flex-1 text-sm text-gray-600 cursor-pointer transition-all p-3 rounded whitespace-pre-wrap break-words"
                           style={{
-                            border:
-                              hoveredSection === `description-${desc.id}`
-                                ? "2px dotted rgb(255, 106, 0)"
-                                : "none",
+                            border: "2px dotted rgb(255, 106, 0)",
                           }}
                         >
                           {desc.content}
