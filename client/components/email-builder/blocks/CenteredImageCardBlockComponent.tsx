@@ -319,10 +319,9 @@ export const CenteredImageCardBlockComponent: React.FC<
       });
       onBlockUpdate({ ...block, buttons: newButtons });
 
-      // Copy to clipboard with complete styling
-      const styledContent = `<a href="${buttonToDuplicate.link}" style="display: inline-block; padding: 10px 24px; background-color: rgb(255, 106, 0); color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border: none; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(255, 106, 0, 0.2);">${buttonToDuplicate.text}</a>`;
+      // Copy to clipboard
       const buttonText = `${buttonToDuplicate.text} (${buttonToDuplicate.link})`;
-      const success = await copyToClipboard(buttonText, styledContent);
+      const success = await copyToClipboard(buttonText);
       if (success) {
         toast({
           title: "Copied!",
