@@ -471,11 +471,10 @@ export const TwoColumnCardBlockComponent: React.FC<
                     }}
                     rows={3}
                   />
-                  <FieldToolbar
+                  <FieldActions
                     cardId={card.id}
                     fieldName="description"
                     fieldValue={editingValue}
-                    onDuplicate={handleDuplicateText}
                     onDelete={handleDeleteField}
                   />
                 </>
@@ -504,11 +503,10 @@ export const TwoColumnCardBlockComponent: React.FC<
                     {card.description}
                   </p>
                   {focusedField === `${card.id}-description` && (
-                    <FieldToolbar
+                    <FieldActions
                       cardId={card.id}
                       fieldName="description"
                       fieldValue={card.description}
-                      onDuplicate={handleDuplicateText}
                       onDelete={handleDeleteField}
                     />
                   )}
