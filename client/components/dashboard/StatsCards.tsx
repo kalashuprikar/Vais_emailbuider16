@@ -38,9 +38,9 @@ export default function StatsCards() {
       {statsData.map((stat, index) => {
         const IconComponent = stat.icon;
         return (
-          <Card key={index} className="hover:shadow-lg transition-shadow duration-200 flex flex-col">
-            <CardContent className="p-6 flex-1 flex items-center">
-              <div className="w-full flex items-center justify-between">
+          <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-valasys-gray-600 mb-1">
                     {stat.title}
