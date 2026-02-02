@@ -297,7 +297,7 @@ export default function PerformanceAnalytics() {
 
         {/* Trends Tab */}
         <TabsContent value="trends" className="space-y-6">
-          <Card>
+          <Card className="content-section-hover">
             <CardHeader>
               <CardTitle className="flex items-center text-sm sm:text-base">
                 <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-valasys-orange flex-shrink-0" />
