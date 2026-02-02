@@ -185,94 +185,35 @@ export const TwoColumnCardBlockComponent: React.FC<
               {card.image ? (
                 <>
                   <div style={{ padding: "12px" }}>
-                    {card.imageLink ? (
-                      <a
-                        href={
-                          card.imageLinkType === "email"
-                            ? `mailto:${card.imageLink}`
-                            : card.imageLink.startsWith("http")
-                              ? card.imageLink
-                              : `https://${card.imageLink}`
+                    <img
+                      src={card.image}
+                      alt={card.imageAlt || "Card image"}
+                      onError={(e) => {
+                        const imgElement = e.target as HTMLImageElement;
+                        imgElement.style.display = "none";
+                        const parent = imgElement.parentElement;
+                        if (parent) {
+                          const errorDiv = document.createElement("div");
+                          errorDiv.className =
+                            "w-full h-40 bg-gray-200 flex items-center justify-center text-center p-4";
+                          errorDiv.innerHTML =
+                            '<p style="font-size: 12px; color: #666;">Image failed to load. Check the URL or upload the image directly.</p>';
+                          parent.appendChild(errorDiv);
                         }
-                        target={
-                          card.imageLinkType === "email" ? undefined : "_blank"
-                        }
-                        rel={
-                          card.imageLinkType === "email"
-                            ? undefined
-                            : "noopener noreferrer"
-                        }
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        style={{
-                          textDecoration: "none",
-                          display: "block",
-                          width: "100%",
-                        }}
-                      >
-                        <img
-                          src={card.image}
-                          alt={card.imageAlt || "Card image"}
-                          onError={(e) => {
-                            const imgElement = e.target as HTMLImageElement;
-                            imgElement.style.display = "none";
-                            const parent = imgElement.parentElement;
-                            if (parent) {
-                              const errorDiv = document.createElement("div");
-                              errorDiv.className =
-                                "w-full h-40 bg-gray-200 flex items-center justify-center text-center p-4";
-                              errorDiv.innerHTML =
-                                '<p style="font-size: 12px; color: #666;">Image failed to load. Check the URL or upload the image directly.</p>';
-                              parent.appendChild(errorDiv);
-                            }
-                          }}
-                          style={{
-                            width: card.imageWidth
-                              ? `${card.imageWidth}px`
-                              : "100%",
-                            height: card.imageHeight
-                              ? `${card.imageHeight}px`
-                              : "auto",
-                            maxWidth: "100%",
-                            display: "block",
-                            objectFit: "cover",
-                            borderRadius: `${card.borderRadius}px`,
-                            cursor: "pointer",
-                          }}
-                        />
-                      </a>
-                    ) : (
-                      <img
-                        src={card.image}
-                        alt={card.imageAlt || "Card image"}
-                        onError={(e) => {
-                          const imgElement = e.target as HTMLImageElement;
-                          imgElement.style.display = "none";
-                          const parent = imgElement.parentElement;
-                          if (parent) {
-                            const errorDiv = document.createElement("div");
-                            errorDiv.className =
-                              "w-full h-40 bg-gray-200 flex items-center justify-center text-center p-4";
-                            errorDiv.innerHTML =
-                              '<p style="font-size: 12px; color: #666;">Image failed to load. Check the URL or upload the image directly.</p>';
-                            parent.appendChild(errorDiv);
-                          }
-                        }}
-                        style={{
-                          width: card.imageWidth
-                            ? `${card.imageWidth}px`
-                            : "100%",
-                          height: card.imageHeight
-                            ? `${card.imageHeight}px`
-                            : "auto",
-                          maxWidth: "100%",
-                          display: "block",
-                          objectFit: "cover",
-                          borderRadius: `${card.borderRadius}px`,
-                        }}
-                      />
-                    )}
+                      }}
+                      style={{
+                        width: card.imageWidth
+                          ? `${card.imageWidth}px`
+                          : "100%",
+                        height: card.imageHeight
+                          ? `${card.imageHeight}px`
+                          : "auto",
+                        maxWidth: "100%",
+                        display: "block",
+                        objectFit: "cover",
+                        borderRadius: `${card.borderRadius}px`,
+                      }}
+                    />
                   </div>
                 </>
               ) : (
