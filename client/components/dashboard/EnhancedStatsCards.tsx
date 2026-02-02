@@ -108,9 +108,9 @@ export default function EnhancedStatsCards({
         return (
           <Card
             key={index}
-            className="hover:shadow-lg transition-all duration-200 group"
+            className="hover:shadow-lg transition-all duration-200 group flex flex-col"
           >
-            <CardContent className="p-6">
+            <CardContent className="p-6 flex flex-col flex-1">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <p className="text-sm font-medium text-valasys-gray-600 mb-1">
