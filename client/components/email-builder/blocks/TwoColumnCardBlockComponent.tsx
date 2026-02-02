@@ -457,7 +457,7 @@ export const TwoColumnCardBlockComponent: React.FC<
                     }}
                     rows={3}
                   />
-                  <FieldActions
+                  <FieldToolbar
                     cardId={card.id}
                     fieldName="description"
                     fieldValue={editingValue}
@@ -489,7 +489,7 @@ export const TwoColumnCardBlockComponent: React.FC<
                     {card.description}
                   </p>
                   {focusedField === `${card.id}-description` && (
-                    <FieldActions
+                    <FieldToolbar
                       cardId={card.id}
                       fieldName="description"
                       fieldValue={card.description}
