@@ -6081,7 +6081,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         if (numericValue !== "") {
                           const num = parseInt(numericValue);
                           const maxValue =
-                            (twoColBlock as any).heightUnit === "%" ? 100 : 1000;
+                            (twoColBlock as any).heightUnit === "%"
+                              ? 100
+                              : 1000;
                           if (num >= 1 && num <= maxValue) {
                             onBlockUpdate({
                               ...twoColBlock,
@@ -6102,7 +6104,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         } else {
                           const num = parseInt(numericValue);
                           const maxValue =
-                            (twoColBlock as any).heightUnit === "%" ? 100 : 1000;
+                            (twoColBlock as any).heightUnit === "%"
+                              ? 100
+                              : 1000;
                           if (num > maxValue) {
                             onBlockUpdate({
                               ...twoColBlock,
@@ -6124,8 +6128,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                           const currentHeight =
                             parseInt(twoCardHeightInput) || 300;
                           const maxValue =
-                            (twoColBlock as any).heightUnit === "%" ? 100 : 1000;
-                          const newHeight = Math.min(currentHeight + 1, maxValue);
+                            (twoColBlock as any).heightUnit === "%"
+                              ? 100
+                              : 1000;
+                          const newHeight = Math.min(
+                            currentHeight + 1,
+                            maxValue,
+                          );
                           onBlockUpdate({
                             ...twoColBlock,
                             height: newHeight,
