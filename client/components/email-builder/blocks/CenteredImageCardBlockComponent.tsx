@@ -603,9 +603,9 @@ export const CenteredImageCardBlockComponent: React.FC<
 
         <div className="space-y-4 text-center pt-4">
           {/* Titles Section */}
-          {titles.length > 0 && (
+          {titles.filter(t => t.content).length > 0 && (
             <div className="space-y-2">
-              {titles.map((title) => (
+              {titles.filter(t => t.content).map((title) => (
                 <div key={title.id}>
                   {editMode === `title-${title.id}` ? (
                     <>
