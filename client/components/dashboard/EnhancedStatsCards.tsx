@@ -168,7 +168,7 @@ export default function EnhancedStatsCards({
 
               {/* Progress bar for targets */}
               {stat.target && (
-                <div className="space-y-2">
+                <div className="space-y-2 mt-auto">
                   <div className="flex justify-between text-xs text-valasys-gray-500">
                     <span>Progress to goal</span>
                     <span>{progressPercentage.toFixed(0)}%</span>
