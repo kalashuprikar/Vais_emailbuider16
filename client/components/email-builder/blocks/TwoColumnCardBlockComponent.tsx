@@ -1,55 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { TwoColumnCardBlock } from "../types";
 import { Upload, Trash2, Plus, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-// Helper function to copy text to clipboard with fallbacks
-const copyToClipboard = async (text: string): Promise<boolean> => {
-  try {
-    // Try modern Clipboard API first
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    }
-  } catch (err) {
-    console.warn("Clipboard API failed, trying fallback:", err);
-  }
-
-  // Fallback: use textarea method
-  try {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    textArea.style.left = "-999999px";
-    textArea.style.top = "-999999px";
-    textArea.style.opacity = "0";
-    document.body.appendChild(textArea);
-
-    // For iOS compatibility
-    if (navigator.userAgent.match(/ipad|iphone/i)) {
-      const range = document.createRange();
-      range.selectNodeContents(textArea);
-      const selection = window.getSelection();
-      selection?.removeAllRanges();
-      selection?.addRange(range);
-      textArea.setSelectionRange(0, 999999);
-    } else {
-      textArea.select();
-    }
-
-    const success = document.execCommand("copy");
-    document.body.removeChild(textArea);
-
-    if (success) {
-      return true;
-    }
-  } catch (err) {
-    console.error("Fallback clipboard copy failed:", err);
-  }
-
-  return false;
-};
+const generateId = () =>
+  `section-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
 interface TwoColumnCardBlockComponentProps {
   block: TwoColumnCardBlock;
@@ -61,6 +17,10 @@ export const TwoColumnCardBlockComponent: React.FC<
   TwoColumnCardBlockComponentProps
 > = ({ block, isSelected, onUpdate }) => {
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
+  const [hoveredFieldId, setHoveredFieldId] = useState<string | null>(null);
+  const [focusedFieldId, setFocusedFieldId] = useState<string | null>(null);
+  const [editingFieldId, setEditingFieldId] = useState<string | null>(null);
+  const [editingValue, setEditingValue] = useState("");
   const [resizingCardId, setResizingCardId] = useState<string | null>(null);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeHandle, setResizeHandle] = useState<string | null>(null);
@@ -68,10 +28,6 @@ export const TwoColumnCardBlockComponent: React.FC<
   const [startY, setStartY] = useState(0);
   const [startWidth, setStartWidth] = useState(0);
   const [startHeight, setStartHeight] = useState(0);
-  const [editingField, setEditingField] = useState<string | null>(null);
-  const [editingValue, setEditingValue] = useState("");
-  const [hoveredField, setHoveredField] = useState<string | null>(null);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -111,93 +67,136 @@ export const TwoColumnCardBlockComponent: React.FC<
     onUpdate({ ...block, cards: updatedCards });
   };
 
-  const handleStartEditingField = (
-    cardId: string,
-    fieldName: "title" | "description",
-  ) => {
-    const card = block.cards.find((c) => c.id === cardId);
-    if (card) {
-      setEditingField(`${cardId}-${fieldName}`);
-      setEditingValue(card[fieldName]);
-    }
-  };
-
-  const handleSaveEdit = (
-    cardId: string,
-    fieldName: "title" | "description",
-  ) => {
-    if (editingField === `${cardId}-${fieldName}`) {
-      const updatedCards = block.cards.map((card) =>
-        card.id === cardId ? { ...card, [fieldName]: editingValue } : card,
-      );
-      onUpdate({ ...block, cards: updatedCards });
-      setEditingField(null);
-      setEditingValue("");
-    }
-  };
-
-  const handleKeyPress = (
-    e: React.KeyboardEvent,
-    cardId: string,
-    fieldName: "title" | "description",
-  ) => {
-    if (e.key === "Enter" && fieldName === "title") {
-      handleSaveEdit(cardId, fieldName);
-    } else if (e.key === "Escape") {
-      setEditingField(null);
-      setEditingValue("");
-    }
-  };
-
-  const handleDuplicateCard = (cardId: string) => {
-    const cardToDuplicate = block.cards.find((c) => c.id === cardId);
-    if (cardToDuplicate) {
-      const newCard = {
-        ...cardToDuplicate,
-        id: `card-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      };
-      const cardIndex = block.cards.findIndex((c) => c.id === cardId);
-      const newCards = [...block.cards];
-      newCards.splice(cardIndex + 1, 0, newCard);
-      onUpdate({ ...block, cards: newCards });
-    }
-  };
-
-  const handleCopyText = async (text: string) => {
-    await copyToClipboard(text);
-  };
-
-  const handleDeleteCard = (cardId: string) => {
-    if (block.cards.length > 1) {
-      const newCards = block.cards.filter((c) => c.id !== cardId);
-      onUpdate({ ...block, cards: newCards });
-      setFocusedField(null);
-    }
-  };
-
-  const handleDeleteField = (
-    cardId: string,
-    fieldName: "title" | "description",
-  ) => {
-    const updatedCards = block.cards.map((card) =>
-      card.id === cardId ? { ...card, [fieldName]: "" } : card,
-    );
+  const handleDuplicateTitle = (cardId: string, titleId: string) => {
+    const updatedCards = block.cards.map((card) => {
+      if (card.id === cardId && card.titles) {
+        const titleIndex = card.titles.findIndex((t) => t.id === titleId);
+        const titleToDuplicate = card.titles[titleIndex];
+        if (titleToDuplicate) {
+          const newTitles = [...card.titles];
+          newTitles.splice(titleIndex + 1, 0, {
+            ...titleToDuplicate,
+            id: generateId(),
+          });
+          return { ...card, titles: newTitles };
+        }
+      }
+      return card;
+    });
     onUpdate({ ...block, cards: updatedCards });
-    setFocusedField(null);
+  };
+
+  const handleDuplicateDescription = (cardId: string, descId: string) => {
+    const updatedCards = block.cards.map((card) => {
+      if (card.id === cardId && card.descriptions) {
+        const descIndex = card.descriptions.findIndex((d) => d.id === descId);
+        const descToDuplicate = card.descriptions[descIndex];
+        if (descToDuplicate) {
+          const newDescriptions = [...card.descriptions];
+          newDescriptions.splice(descIndex + 1, 0, {
+            ...descToDuplicate,
+            id: generateId(),
+          });
+          return { ...card, descriptions: newDescriptions };
+        }
+      }
+      return card;
+    });
+    onUpdate({ ...block, cards: updatedCards });
+  };
+
+  const handleDeleteTitle = (cardId: string, titleId: string) => {
+    const updatedCards = block.cards.map((card) => {
+      if (card.id === cardId && card.titles) {
+        const newTitles = card.titles.filter((t) => t.id !== titleId);
+        return { ...card, titles: newTitles };
+      }
+      return card;
+    });
+    onUpdate({ ...block, cards: updatedCards });
+  };
+
+  const handleDeleteDescription = (cardId: string, descId: string) => {
+    const updatedCards = block.cards.map((card) => {
+      if (card.id === cardId && card.descriptions) {
+        const newDescriptions = card.descriptions.filter(
+          (d) => d.id !== descId,
+        );
+        return { ...card, descriptions: newDescriptions };
+      }
+      return card;
+    });
+    onUpdate({ ...block, cards: updatedCards });
+  };
+
+  const handleStartEditingTitle = (cardId: string, titleId: string) => {
+    const card = block.cards.find((c) => c.id === cardId);
+    if (card?.titles) {
+      const title = card.titles.find((t) => t.id === titleId);
+      if (title) {
+        setEditingFieldId(titleId);
+        setEditingValue(title.content);
+      }
+    }
+  };
+
+  const handleStartEditingDescription = (cardId: string, descId: string) => {
+    const card = block.cards.find((c) => c.id === cardId);
+    if (card?.descriptions) {
+      const desc = card.descriptions.find((d) => d.id === descId);
+      if (desc) {
+        setEditingFieldId(descId);
+        setEditingValue(desc.content);
+      }
+    }
+  };
+
+  const handleSaveEditTitle = (cardId: string, titleId: string) => {
+    const updatedCards = block.cards.map((card) => {
+      if (card.id === cardId && card.titles) {
+        return {
+          ...card,
+          titles: card.titles.map((t) =>
+            t.id === titleId ? { ...t, content: editingValue } : t,
+          ),
+        };
+      }
+      return card;
+    });
+    onUpdate({ ...block, cards: updatedCards });
+    setEditingFieldId(null);
+    setEditingValue("");
+  };
+
+  const handleSaveEditDescription = (cardId: string, descId: string) => {
+    const updatedCards = block.cards.map((card) => {
+      if (card.id === cardId && card.descriptions) {
+        return {
+          ...card,
+          descriptions: card.descriptions.map((d) =>
+            d.id === descId ? { ...d, content: editingValue } : d,
+          ),
+        };
+      }
+      return card;
+    });
+    onUpdate({ ...block, cards: updatedCards });
+    setEditingFieldId(null);
+    setEditingValue("");
   };
 
   const FieldToolbar = ({
+    fieldId,
     cardId,
-    fieldName,
-    fieldValue,
-    onCopy,
+    fieldType,
+    onDuplicate,
     onDelete,
   }: {
+    fieldId: string;
     cardId: string;
-    fieldName: "title" | "description";
-    fieldValue: string;
-    onCopy: (value: string, fieldName: "title" | "description") => void;
-    onDelete: (cardId: string, fieldName: "title" | "description") => void;
+    fieldType: "title" | "description";
+    onDuplicate: (cardId: string, fieldId: string) => void;
+    onDelete: (cardId: string, fieldId: string) => void;
   }) => {
     return (
       <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2 w-fit">
@@ -205,23 +204,10 @@ export const TwoColumnCardBlockComponent: React.FC<
           variant="ghost"
           size="sm"
           className="h-7 w-7 p-0 hover:bg-gray-100"
-          title="Add new card"
+          title={`Duplicate this ${fieldType}`}
           onClick={(e) => {
             e.stopPropagation();
-            handleDuplicateCard(cardId);
-          }}
-        >
-          <Plus className="w-3 h-3 text-gray-700" />
-        </Button>
-
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-7 w-7 p-0 hover:bg-gray-100"
-          title="Copy"
-          onClick={(e) => {
-            e.stopPropagation();
-            onCopy(fieldValue, fieldName);
+            onDuplicate(cardId, fieldId);
           }}
         >
           <Copy className="w-3 h-3 text-gray-700" />
@@ -231,10 +217,10 @@ export const TwoColumnCardBlockComponent: React.FC<
           variant="ghost"
           size="sm"
           className="h-7 w-7 p-0 hover:bg-red-100"
-          title="Delete"
+          title={`Delete this ${fieldType}`}
           onClick={(e) => {
             e.stopPropagation();
-            onDelete(cardId, fieldName);
+            onDelete(cardId, fieldId);
           }}
         >
           <Trash2 className="w-3 h-3 text-red-600" />
@@ -347,214 +333,258 @@ export const TwoColumnCardBlockComponent: React.FC<
       }}
     >
       <div className="flex gap-5">
-        {block.cards.map((card, index) => (
-          <div
-            key={card.id}
-            className="flex-1 rounded-lg overflow-hidden flex flex-col"
-            style={{
-              backgroundColor: card.backgroundColor,
-              margin: `${card.margin}px`,
-              borderRadius: `${card.borderRadius}px`,
-              height: "400px",
-            }}
-            onMouseEnter={() => setHoveredCardId(card.id)}
-            onMouseLeave={() => setHoveredCardId(null)}
-          >
-            {/* Image Section */}
-            <div
-              className="relative h-40 flex-shrink-0"
-              style={{
-                borderRadius: `${card.borderRadius}px ${card.borderRadius}px 0 0`,
-              }}
-            >
-              {card.image ? (
-                <>
-                  <div
-                    style={{
-                      padding: "12px",
-                      height: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <img
-                      src={card.image}
-                      alt={card.imageAlt || "Card image"}
-                      onError={(e) => {
-                        const imgElement = e.target as HTMLImageElement;
-                        imgElement.style.display = "none";
-                        const parent = imgElement.parentElement;
-                        if (parent) {
-                          const errorDiv = document.createElement("div");
-                          errorDiv.className =
-                            "w-full h-40 bg-gray-200 flex items-center justify-center text-center p-4";
-                          errorDiv.innerHTML =
-                            '<p style="font-size: 12px; color: #666;">Image failed to load. Check the URL or upload the image directly.</p>';
-                          parent.appendChild(errorDiv);
-                        }
-                      }}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        maxWidth: "100%",
-                        display: "block",
-                        objectFit: "cover",
-                        borderRadius: `${card.borderRadius}px`,
-                      }}
-                    />
-                  </div>
-                </>
-              ) : (
-                <label className="flex items-center justify-center w-full h-full bg-gray-800 cursor-pointer hover:bg-gray-700 transition-colors rounded">
-                  <div className="flex flex-col items-center justify-center">
-                    <Upload className="w-6 h-6 text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-400">Click to upload</p>
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, card.id)}
-                    className="hidden"
-                  />
-                </label>
-              )}
-            </div>
+        {block.cards.map((card, index) => {
+          const titles = useMemo(
+            () =>
+              card.titles ||
+              (card.title ? [{ id: `title-${card.id}`, content: card.title }] : []),
+            [card.titles, card.title],
+          );
 
-            {/* Content Section */}
+          const descriptions = useMemo(
+            () =>
+              card.descriptions ||
+              (card.description
+                ? [{ id: `description-${card.id}`, content: card.description }]
+                : []),
+            [card.descriptions, card.description],
+          );
+
+          return (
             <div
-              className="flex-1 overflow-hidden"
+              key={card.id}
+              className="flex-1 rounded-lg overflow-hidden flex flex-col"
               style={{
-                padding: `${Math.max(12, card.padding)}px`,
-                color: card.textColor,
-                margin: 0,
-                border: "none",
+                backgroundColor: card.backgroundColor,
+                margin: `${card.margin}px`,
+                borderRadius: `${card.borderRadius}px`,
+                height: "400px",
               }}
+              onMouseEnter={() => setHoveredCardId(card.id)}
+              onMouseLeave={() => setHoveredCardId(null)}
             >
-              {editingField === `${card.id}-title` ? (
-                <>
-                  <input
-                    type="text"
-                    autoFocus
-                    value={editingValue}
-                    onChange={(e) => setEditingValue(e.target.value)}
-                    onBlur={() => handleSaveEdit(card.id, "title")}
-                    onKeyPress={(e) => handleKeyPress(e, card.id, "title")}
-                    className="w-full font-bold text-base mb-2 m-0 p-1 border-2 border-valasys-orange rounded"
-                    style={{
-                      color: card.textColor,
-                      backgroundColor: "transparent",
-                    }}
-                  />
-                  <FieldToolbar
-                    cardId={card.id}
-                    fieldName="title"
-                    fieldValue={editingValue}
-                    onCopy={(value, fieldName) => handleCopyText(value)}
-                    onDelete={handleDeleteField}
-                  />
-                </>
-              ) : card.title ? (
-                <div
-                  onMouseEnter={() => setHoveredField(`${card.id}-title`)}
-                  onMouseLeave={() => setHoveredField(null)}
-                >
-                  <h3
-                    className="font-bold text-base mb-2 m-0 cursor-pointer px-2 py-1 rounded transition-all"
-                    style={{
-                      color: card.textColor,
-                      border:
-                        focusedField === `${card.id}-title`
-                          ? "2px solid rgb(255, 106, 0)"
-                          : hoveredField === `${card.id}-title`
-                            ? "2px dotted rgb(255, 106, 0)"
-                            : "none",
-                    }}
-                    onClick={() => setFocusedField(`${card.id}-title`)}
-                    onDoubleClick={() =>
-                      handleStartEditingField(card.id, "title")
-                    }
-                    title="Double-click to edit"
-                  >
-                    {card.title}
-                  </h3>
-                  {focusedField === `${card.id}-title` && (
-                    <FieldToolbar
-                      cardId={card.id}
-                      fieldName="title"
-                      fieldValue={card.title}
-                      onCopy={(value, fieldName) => handleCopyText(value)}
-                      onDelete={handleDeleteField}
+              {/* Image Section */}
+              <div
+                className="relative h-40 flex-shrink-0"
+                style={{
+                  borderRadius: `${card.borderRadius}px ${card.borderRadius}px 0 0`,
+                }}
+              >
+                {card.image ? (
+                  <>
+                    <div
+                      style={{
+                        padding: "12px",
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <img
+                        src={card.image}
+                        alt={card.imageAlt || "Card image"}
+                        onError={(e) => {
+                          const imgElement = e.target as HTMLImageElement;
+                          imgElement.style.display = "none";
+                          const parent = imgElement.parentElement;
+                          if (parent) {
+                            const errorDiv = document.createElement("div");
+                            errorDiv.className =
+                              "w-full h-40 bg-gray-200 flex items-center justify-center text-center p-4";
+                            errorDiv.innerHTML =
+                              '<p style="font-size: 12px; color: #666;">Image failed to load. Check the URL or upload the image directly.</p>';
+                            parent.appendChild(errorDiv);
+                          }
+                        }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          maxWidth: "100%",
+                          display: "block",
+                          objectFit: "cover",
+                          borderRadius: `${card.borderRadius}px`,
+                        }}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <label className="flex items-center justify-center w-full h-full bg-gray-800 cursor-pointer hover:bg-gray-700 transition-colors rounded">
+                    <div className="flex flex-col items-center justify-center">
+                      <Upload className="w-6 h-6 text-gray-400 mb-2" />
+                      <p className="text-sm text-gray-400">Click to upload</p>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, card.id)}
+                      className="hidden"
                     />
-                  )}
+                  </label>
+                )}
+              </div>
+
+              {/* Content Section */}
+              <div
+                className="flex-1 overflow-hidden"
+                style={{
+                  padding: `${Math.max(12, card.padding)}px`,
+                  color: card.textColor,
+                  margin: 0,
+                  border: "none",
+                }}
+              >
+                {/* Titles */}
+                <div className="space-y-2 mb-2">
+                  {titles.map((title) => (
+                    <div
+                      key={title.id}
+                      onMouseEnter={() => setHoveredFieldId(title.id)}
+                      onMouseLeave={() => setHoveredFieldId(null)}
+                    >
+                      {editingFieldId === title.id ? (
+                        <>
+                          <input
+                            type="text"
+                            autoFocus
+                            value={editingValue}
+                            onChange={(e) => setEditingValue(e.target.value)}
+                            onBlur={() => handleSaveEditTitle(card.id, title.id)}
+                            onKeyPress={(e) => {
+                              if (e.key === "Enter") {
+                                handleSaveEditTitle(card.id, title.id);
+                              } else if (e.key === "Escape") {
+                                setEditingFieldId(null);
+                                setEditingValue("");
+                              }
+                            }}
+                            className="w-full font-bold text-base mb-2 m-0 p-1 border-2 border-valasys-orange rounded"
+                            style={{
+                              color: card.textColor,
+                              backgroundColor: "transparent",
+                            }}
+                          />
+                          <FieldToolbar
+                            fieldId={title.id}
+                            cardId={card.id}
+                            fieldType="title"
+                            onDuplicate={handleDuplicateTitle}
+                            onDelete={handleDeleteTitle}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <h3
+                            className="font-bold text-base mb-2 m-0 cursor-pointer px-2 py-1 rounded transition-all"
+                            style={{
+                              color: card.textColor,
+                              border:
+                                focusedFieldId === title.id
+                                  ? "2px solid rgb(255, 106, 0)"
+                                  : hoveredFieldId === title.id
+                                    ? "2px dotted rgb(255, 106, 0)"
+                                    : "none",
+                            }}
+                            onClick={() => setFocusedFieldId(title.id)}
+                            onDoubleClick={() =>
+                              handleStartEditingTitle(card.id, title.id)
+                            }
+                            title="Double-click to edit"
+                          >
+                            {title.content || "Add title"}
+                          </h3>
+                          {focusedFieldId === title.id && (
+                            <FieldToolbar
+                              fieldId={title.id}
+                              cardId={card.id}
+                              fieldType="title"
+                              onDuplicate={handleDuplicateTitle}
+                              onDelete={handleDeleteTitle}
+                            />
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              ) : null}
-              {editingField === `${card.id}-description` ? (
-                <>
-                  <textarea
-                    autoFocus
-                    value={editingValue}
-                    onChange={(e) => setEditingValue(e.target.value)}
-                    onBlur={() => handleSaveEdit(card.id, "description")}
-                    onKeyPress={(e) => {
-                      if (e.key === "Escape") {
-                        setEditingField(null);
-                        setEditingValue("");
-                      }
-                    }}
-                    className="w-full text-xs leading-snug m-0 p-1 border-2 border-valasys-orange rounded"
-                    style={{
-                      color: card.textColor,
-                      backgroundColor: "transparent",
-                    }}
-                    rows={3}
-                  />
-                  <FieldToolbar
-                    cardId={card.id}
-                    fieldName="description"
-                    fieldValue={editingValue}
-                    onCopy={(value, fieldName) => handleCopyText(value)}
-                    onDelete={handleDeleteField}
-                  />
-                </>
-              ) : card.description ? (
-                <div
-                  onMouseEnter={() => setHoveredField(`${card.id}-description`)}
-                  onMouseLeave={() => setHoveredField(null)}
-                >
-                  <p
-                    className="text-xs leading-snug m-0 cursor-pointer px-2 py-1 rounded transition-all"
-                    style={{
-                      color: card.textColor,
-                      border:
-                        focusedField === `${card.id}-description`
-                          ? "2px solid rgb(255, 106, 0)"
-                          : hoveredField === `${card.id}-description`
-                            ? "2px dotted rgb(255, 106, 0)"
-                            : "none",
-                    }}
-                    onClick={() => setFocusedField(`${card.id}-description`)}
-                    onDoubleClick={() =>
-                      handleStartEditingField(card.id, "description")
-                    }
-                    title="Double-click to edit"
-                  >
-                    {card.description}
-                  </p>
-                  {focusedField === `${card.id}-description` && (
-                    <FieldToolbar
-                      cardId={card.id}
-                      fieldName="description"
-                      fieldValue={card.description}
-                      onCopy={(value, fieldName) => handleCopyText(value)}
-                      onDelete={handleDeleteField}
-                    />
-                  )}
+
+                {/* Descriptions */}
+                <div className="space-y-2">
+                  {descriptions.map((desc) => (
+                    <div
+                      key={desc.id}
+                      onMouseEnter={() => setHoveredFieldId(desc.id)}
+                      onMouseLeave={() => setHoveredFieldId(null)}
+                    >
+                      {editingFieldId === desc.id ? (
+                        <>
+                          <textarea
+                            autoFocus
+                            value={editingValue}
+                            onChange={(e) => setEditingValue(e.target.value)}
+                            onBlur={() =>
+                              handleSaveEditDescription(card.id, desc.id)
+                            }
+                            onKeyPress={(e) => {
+                              if (e.key === "Escape") {
+                                setEditingFieldId(null);
+                                setEditingValue("");
+                              }
+                            }}
+                            className="w-full text-xs leading-snug m-0 p-1 border-2 border-valasys-orange rounded"
+                            style={{
+                              color: card.textColor,
+                              backgroundColor: "transparent",
+                            }}
+                            rows={3}
+                          />
+                          <FieldToolbar
+                            fieldId={desc.id}
+                            cardId={card.id}
+                            fieldType="description"
+                            onDuplicate={handleDuplicateDescription}
+                            onDelete={handleDeleteDescription}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <p
+                            className="text-xs leading-snug m-0 cursor-pointer px-2 py-1 rounded transition-all"
+                            style={{
+                              color: card.textColor,
+                              border:
+                                focusedFieldId === desc.id
+                                  ? "2px solid rgb(255, 106, 0)"
+                                  : hoveredFieldId === desc.id
+                                    ? "2px dotted rgb(255, 106, 0)"
+                                    : "none",
+                            }}
+                            onClick={() => setFocusedFieldId(desc.id)}
+                            onDoubleClick={() =>
+                              handleStartEditingDescription(card.id, desc.id)
+                            }
+                            title="Double-click to edit"
+                          >
+                            {desc.content || "Add description"}
+                          </p>
+                          {focusedFieldId === desc.id && (
+                            <FieldToolbar
+                              fieldId={desc.id}
+                              cardId={card.id}
+                              fieldType="description"
+                              onDuplicate={handleDuplicateDescription}
+                              onDelete={handleDeleteDescription}
+                            />
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              ) : null}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
