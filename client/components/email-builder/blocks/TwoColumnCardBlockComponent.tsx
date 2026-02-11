@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { TwoColumnCardBlock } from "../types";
-import { Upload, Trash2, Plus } from "lucide-react";
+import { Upload, Trash2, Plus, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -327,14 +327,53 @@ export const TwoColumnCardBlockComponent: React.FC<
   ]);
 
   return (
-    <div
-      className={`w-full rounded-lg overflow-hidden ${
-        isSelected ? "ring-2 ring-valasys-orange" : ""
-      }`}
-      style={{
-        width: `${block.width}${block.widthUnit}`,
-      }}
-    >
+    <div className="w-full">
+      {isSelected && (onDuplicate || onDelete) && (
+        <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mb-3 w-fit">
+          {onDuplicate && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 hover:bg-gray-100"
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDuplicate(block, blockIndex + 1);
+              }}
+              title="Duplicate this section"
+            >
+              <Copy className="w-4 h-4 text-gray-700" />
+            </Button>
+          )}
+
+          {onDelete && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 hover:bg-red-100"
+              onMouseDown={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(block.id);
+              }}
+              title="Delete this section"
+            >
+              <Trash2 className="w-4 h-4 text-red-600" />
+            </Button>
+          )}
+        </div>
+      )}
+
+      <div
+        className={`w-full rounded-lg overflow-hidden ${
+          isSelected ? "ring-2 ring-valasys-orange" : ""
+        }`}
+        style={{
+          width: `${block.width}${block.widthUnit}`,
+        }}
+      >
         <div className="flex gap-5">
           {block.cards.map((card, index) => {
           const titles = useMemo(
@@ -592,6 +631,7 @@ export const TwoColumnCardBlockComponent: React.FC<
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );
